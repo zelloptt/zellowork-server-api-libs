@@ -109,7 +109,11 @@ public class ZelloAPI {
    - parameter completionHandler: completion handler indicating success, response and error.
    */
   public func logout(completionHandler: ResultCompletionHandler) {
-    callAPI("user/logout", httpMethod: .GET, completionHandler: completionHandler)
+    callAPI("user/logout", httpMethod: .GET, completionHandler: { [weak self] (success, response, error) -> Void in
+      self?.sessionId = nil
+      
+      completionHandler(success, response, error)
+    })
   }
   
   /**

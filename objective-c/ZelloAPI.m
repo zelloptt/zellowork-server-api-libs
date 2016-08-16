@@ -84,7 +84,12 @@ typedef NS_ENUM(NSInteger, HTTPMethod) {
 }
 
 - (void)logout:(ResultCompletionBlock)completionBlock {
-  [self callAPI:@"user/logout" httpMethod:HTTPMethodGET parameters:NULL completionBlock:completionBlock];
+  __weak typeof(self) weakSelf = self;
+  [self callAPI:@"user/logout" httpMethod:HTTPMethodGET parameters:NULL completionBlock:^(BOOL success, NSDictionary * _Nullable response, NSError * _Nullable error) {
+    weakSelf.sessionId = NULL;
+    
+    completionBlock(success, response, error);
+  }];
 }
 
 - (void)getUsers:(NSString *)username isGateway:(BOOL)isGateway max:(NSNumber *)max start:(NSNumber *)start channel:(NSString *)channel completionBlock:(ResultCompletionBlock)completionBlock {

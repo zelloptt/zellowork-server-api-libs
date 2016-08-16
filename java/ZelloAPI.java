@@ -111,8 +111,15 @@ public class ZelloAPI {
 
 	 - parameter completionHandler: completion handler indicating success, response and error.
 	 */
-	public void logout(ResultCompletionHandler completionHandler) {
-		callAPI("user/logout", HTTPMethod.GET, null, completionHandler);
+	public void logout(final ResultCompletionHandler completionHandler) {
+		callAPI("user/logout", HTTPMethod.GET, null, new ResultCompletionHandler() {
+			@Override
+			public void onResult(boolean success, JSONObject response, Exception exception) {
+				sessionId = null;
+
+				completionHandler.onResult(success, response, exception);
+			}
+		});
 	}
 
 	/**
