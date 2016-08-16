@@ -393,8 +393,6 @@ public class ZelloAPI {
       urlString += "?sid=" + sessionId
     }
     
-    print(urlString)
-    
     lastURL = urlString
     
     guard let nsURL = NSURL(string: urlString) else {
@@ -408,8 +406,6 @@ public class ZelloAPI {
     request.HTTPMethod = httpMethod.rawValue
     
     if let parameters = parameters {
-      print(parameters)
-      
       request.setBodyContentFromString(parameters)
     }
     
@@ -432,23 +428,23 @@ public class ZelloAPI {
           return
         }
         
-        guard let response = responseDictionary else {
+        guard let unwrappedResponseDictionary = responseDictionary else {
           dispatch_async(dispatch_get_main_queue(), {
             completionHandler(false, nil, NSError.unknownError())
           })
           return
         }
         
-        guard let statusCode = response["code"] as? String else {
+        guard let statusCode = unwrappedResponseDictionary["code"] as? String else {
           dispatch_async(dispatch_get_main_queue(), {
-            completionHandler(false, response, NSError.unknownError())
+            completionHandler(false, unwrappedResponseDictionary, NSError.unknownError())
           })
           return
         }
         
         let success = statusCode == "200"
         dispatch_async(dispatch_get_main_queue(), { 
-          completionHandler(success, response, NSError.unknownError())
+          completionHandler(success, unwrappedResponseDictionary, nil)
         })
         return
       } else {

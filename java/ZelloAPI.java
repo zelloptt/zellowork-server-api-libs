@@ -50,11 +50,12 @@ public class ZelloAPI {
 	/// Last accessed API URL. Useful for API troubleshooting.
 	public String lastURL;
 
-	/// Server hostname or IP address
+	/// Server hostname or IP address.
 	private String host;
-	/// API Key
+	/// API Key.
 	private String apiKey;
 
+	/// Handler to call completionHandler on the main thread.
 	private Handler handler = new Handler(Looper.getMainLooper());
 
 	public ZelloAPI(String host, String apiKey) {
@@ -461,7 +462,7 @@ public class ZelloAPI {
 			case POST:
 				return "POST";
 			case GET:
-				return "POST";
+				return "GET";
 		}
 
 		return "";

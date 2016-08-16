@@ -82,6 +82,7 @@ typedef NS_ENUM(NSInteger, HTTPMethod) {
     [weakSelf callAPI:@"user/login" httpMethod:HTTPMethodPOST parameters:parameters completionBlock:completionBlock];
   }];
 }
+
 - (void)logout:(ResultCompletionBlock)completionBlock {
   [self callAPI:@"user/logout" httpMethod:HTTPMethodGET parameters:NULL completionBlock:completionBlock];
 }
