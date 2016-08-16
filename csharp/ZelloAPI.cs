@@ -1,4 +1,8 @@
-﻿using System;
+﻿//
+//  Copyright © 2016 Zello. All rights reserved.
+//
+
+using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Text;
