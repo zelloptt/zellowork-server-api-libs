@@ -68,6 +68,17 @@ public class ZelloAPI {
 		this.sessionId = sessionId;
 	}
 
+	/**
+	 API client authentication.
+	 If authentication fails, use the errorCode and errorDescription attributes on the response dictionary to get error details.
+	 If authentication succeeds, sessionId is set to the Session ID.
+	 The Session ID is reusable so it's recommended that you save this value and use it for further API calls.
+	 Once you are done using the API, call ZelloAPI.logout() to end the session and invalidate Session ID.
+
+	 - parameter username:          administrative username
+	 - parameter password:          administrative password
+	 - parameter completionHandler: completion handler indicating success, response and error.
+	 */
 	public void authenticate(final String username, final String password, final ResultCompletionHandler completionHandler) {
 		callAPI("user/gettoken", HTTPMethod.GET, null, new ResultCompletionHandler() {
 			@Override
