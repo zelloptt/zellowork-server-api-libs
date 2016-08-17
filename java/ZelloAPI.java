@@ -4,9 +4,6 @@
 
 package com.zellowork.apiwrapper;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -54,9 +51,6 @@ public class ZelloAPI {
 	private String host;
 	/// API Key.
 	private String apiKey;
-
-	/// Handler to call completionHandler on the main thread.
-	private Handler handler = new Handler(Looper.getMainLooper());
 
 	public ZelloAPI(String host, String apiKey) {
 		this(host, apiKey, null);
@@ -444,19 +438,9 @@ public class ZelloAPI {
 					final JSONObject result = new JSONObject(contentAsString);
 
 					final String response = result.getString("code");
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							resultCompletionHandler.onResult(response != null && response.equals("200"), result, null);
-						}
-					});
+					resultCompletionHandler.onResult(response != null && response.equals("200"), result, null);
 				} catch (final Exception e) {
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							resultCompletionHandler.onResult(false, null, e);
-						}
-					});
+					resultCompletionHandler.onResult(false, null, e);
 				} finally {
 					try {
 						if (is != null) {
