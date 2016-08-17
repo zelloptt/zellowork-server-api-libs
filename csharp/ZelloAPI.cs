@@ -386,16 +386,22 @@ namespace Zello.API
 		async Task<ZelloAPIResult> callAPI(string command, HTTPMethod method, string parameters)
 		{
 			ZelloAPIResult returnResult;
-			string s = host + "/" + command;
+
+			string prefix = "http://";
+			if (host.Contains("http://") || host.Contains("https://"))
+			{
+				prefix = "";
+			}
+			string urlString = prefix + host + "/" + command;
 
 			if (SessionId != null)
 			{
-				s += "?sid=" + SessionId;
+				urlString += "?sid=" + SessionId;
 			}
 
-			LastURL = s;
+			LastURL = urlString;
 
-			var request = (HttpWebRequest)WebRequest.Create(s);
+			var request = (HttpWebRequest)WebRequest.Create(urlString);
 			request.Method = convertHTTPMethodToString(method);
 
 			if (parameters != null)

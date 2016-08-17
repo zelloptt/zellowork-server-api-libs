@@ -393,7 +393,11 @@ public class ZelloAPI {
 	}
 
 	private void callAPI(String command, HTTPMethod method, String parameters, ResultCompletionHandler completionHandler) {
-		String string = host + "/" + command;
+		String prefix = "http://";
+		if (host.contains("http://") || host.contains("https://")) {
+			prefix = "";
+		}
+		String string = prefix + host + "/" + command;
 
 		if (sessionId != null) {
 			string += "?sid=" + sessionId;

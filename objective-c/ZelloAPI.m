@@ -253,7 +253,12 @@ typedef NS_ENUM(NSInteger, HTTPMethod) {
     return;
   }
   
-  NSString *urlString = [[self.host stringByAppendingString:@"/"] stringByAppendingString:command];
+  NSString *prefix = @"http://";
+  if ([self.host containsString:@"http://"] || [self.host containsString:@"https://"]) {
+    prefix = @"";
+  }
+  
+  NSString *urlString = [prefix stringByAppendingString:[[self.host stringByAppendingString:@"/"] stringByAppendingString:command]];
   
   if (self.sessionId) {
     [[urlString stringByAppendingString:@"?sid="] stringByAppendingString:_sessionId];

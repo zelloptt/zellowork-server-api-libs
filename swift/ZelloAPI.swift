@@ -391,7 +391,12 @@ public class ZelloAPI {
       return
     }
     
-    var urlString = host + "/" + command
+    var prefix = "http://"
+    if host.containsString("http://") || host.containsString("https://") {
+      prefix = ""
+    }
+    
+    var urlString = prefix + host + "/" + command
 
     if let sessionId = sessionId {
       urlString += "?sid=" + sessionId
