@@ -22,7 +22,7 @@ namespace Zello.API
 	/// and any text data returned are in UTF-8 as well.
 	/// - Version 1.0.0
 	/// </summary>
-	public class ZelloAPI : ResultCompletionHandler
+	public class ZelloAPI
 	{
 		/// <summary>
 		/// API Version
@@ -47,16 +47,6 @@ namespace Zello.API
 		/// API Key
 		/// </summary>
 		string apiKey;
-
-		/// <summary>
-		/// Completion handler to finish authentication.
-		/// </summary>
-		ResultCompletionHandler authenticationCompletionHandler;
-		string username;
-		string password;
-
-		/// Completion handler to finish logging out.
-		ResultCompletionHandler logoutCompletionHandler;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Zello.API.ZelloAPI"/> class.
@@ -90,13 +80,39 @@ namespace Zello.API
 		/// </summary>
 		/// <param name="username">administrative username.</param>
 		/// <param name="password">administrative password.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void Authenticate(string username, string password, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> Authenticate(string username, string password)
 		{
-			this.username = username;
-			this.password = password;
-			authenticationCompletionHandler = completionHandler;
-			callAPI("user/gettoken", HTTPMethod.GET, null, this);
+			ZelloAPIResult result = await callAPI("user/gettoken", HTTPMethod.GET, null).ConfigureAwait(false);
+
+			ZelloAPIResult returnResult;
+			if (!result.Success)
+			{
+				returnResult = new ZelloAPIResult(false, result.Response, null);
+				return returnResult;
+			}
+
+			if (result.Response == null)
+			{
+				returnResult = new ZelloAPIResult(false, null, null);
+				return returnResult;
+			}
+
+			var token = (string)result.Response["token"];
+
+			SessionId = (string)result.Response["sid"];
+
+			if (apiKey == null)
+			{
+				returnResult = new ZelloAPIResult(false, result.Response, null);
+				return returnResult;
+			}
+
+			string hashedPassword = MD5Hash(MD5Hash(password) + token + apiKey);
+			string parameters = "username=" + username + "&password=" + hashedPassword;
+
+			returnResult = await callAPI("user/login", HTTPMethod.POST, parameters);
+
+			return returnResult;
 		}
 
 		/// <summary>
@@ -104,11 +120,12 @@ namespace Zello.API
 		/// Use this method to terminate the API session.
 		/// See ZelloAPI.Authenticate().
 		/// </summary>
-		/// <param name="completionHandler">Completion handler.</param>
-		public void Logout(ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> Logout()
 		{
-			logoutCompletionHandler = completionHandler;
-			callAPI("user/logout", HTTPMethod.GET, null, this);
+			ZelloAPIResult result = await callAPI("user/logout", HTTPMethod.GET, null);
+			SessionId = null;
+
+			return result;
 		}
 
 		/// <summary>
@@ -119,8 +136,7 @@ namespace Zello.API
 		/// <param name="max">maximum number of results to fetch.</param>
 		/// <param name="start">start index of results to fetch.</param>
 		/// <param name="channel">channel name.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void GetUsers(string username, bool isGateway, int? max, int? start, string channel, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> GetUsers(string username, bool isGateway, int? max, int? start, string channel)
 		{
 			string command = "user/get";
 
@@ -145,7 +161,7 @@ namespace Zello.API
 				command += "/start/" + start;
 			}
 
-			callAPI(command, HTTPMethod.GET, null, completionHandler);
+			return await callAPI(command, HTTPMethod.GET, null);
 		}
 
 		/// <summary>
@@ -154,8 +170,7 @@ namespace Zello.API
 		/// <param name="name">optional name of the channel, for which the details are requested. If omitted, the full channels list is returned.</param>
 		/// <param name="max">maximum number of results to fetch.</param>
 		/// <param name="start">start index of results to fetch.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void GetChannels(string name, int? max, int? start, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> GetChannels(string name, int? max, int? start)
 		{
 			string command = "channel/get";
 
@@ -172,7 +187,7 @@ namespace Zello.API
 				command += "/start/" + start;
 			}
 
-			callAPI(command, HTTPMethod.GET, null, completionHandler);
+			return await callAPI(command, HTTPMethod.GET, null);
 		}
 
 		/// <summary>
@@ -180,14 +195,13 @@ namespace Zello.API
 		/// </summary>
 		/// <param name="channelName">name of the channel where the users will be added.</param>
 		/// <param name="users">usernames of the users to add.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void AddToChannel(string channelName, ArrayList users, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> AddToChannel(string channelName, ArrayList users)
 		{
 			string command = "user/addto/" + urlEncode(channelName);
 
 			string parameters = implode("login[]=", "&login[]=", users);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -195,15 +209,14 @@ namespace Zello.API
 		/// </summary>
 		/// <param name="channelNames">channel names where the users are added.</param>
 		/// <param name="users">usernames of the users to add.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void AddToChannels(ArrayList channelNames, ArrayList users, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> AddToChannels(ArrayList channelNames, ArrayList users)
 		{
 			string command = "user/addtochannels";
 
 			string parameters = implode("users[]=", "&users[]=", users);
 			parameters += implode("&channels[]=", "&channels[]=", channelNames);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -211,14 +224,13 @@ namespace Zello.API
 		/// </summary>
 		/// <param name="channelName">name of the channel.</param>
 		/// <param name="users">usernames of the users to remove from the channel.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void RemoveFromChannel(string channelName, ArrayList users, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> RemoveFromChannel(string channelName, ArrayList users)
 		{
 			string command = "user/removefrom/" + urlEncode(channelName);
 
 			string parameters = implode("login[]=", "&login[]=", users);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -226,15 +238,14 @@ namespace Zello.API
 		/// </summary>
 		/// <param name="channelNames">names of the channels.</param>
 		/// <param name="users">usernames of the users to remove from channels.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void RemoveFromChannels(ArrayList channelNames, ArrayList users, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> RemoveFromChannels(ArrayList channelNames, ArrayList users)
 		{
 			string command = "user/removefromchannels";
 
 			string parameters = implode("users[]=", "&users[]=", users);
 			parameters += implode("&channels[]=", "&channels[]=", channelNames);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -257,14 +268,13 @@ namespace Zello.API
 		/// - add - "true" or "false". If set to "true", the existing user will not be updated and an error will be returned.		
 		/// </summary>
 		/// <param name="user">dictionary of user attributes.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void SaveUser(Dictionary<string, string> user, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> SaveUser(Dictionary<string, string> user)
 		{
 			string command = "user/save";
 
 			string parameters = createURLStringFromDictionary(user);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -273,14 +283,13 @@ namespace Zello.API
 		/// See ZelloAPI.saveUser().
 		/// </summary>
 		/// <param name="users">usernames of the users to remove.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void DeleteUsers(ArrayList users, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> DeleteUsers(ArrayList users)
 		{
 			string command = "user/delete";
 
 			string parameters = implode("login[]=", "&login[]=", users);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -289,8 +298,7 @@ namespace Zello.API
 		/// <param name="name">channel name.</param>
 		/// <param name="isGroup">true means it is a group channel. false means it is a dynamic channel.</param>
 		/// <param name="isHidden">when set to true in combination with isGroup set to true, a hidden group channel is created.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void AddChannel(string name, bool? isGroup, bool? isHidden, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> AddChannel(string name, bool? isGroup, bool? isHidden)
 		{
 			string command = "channel/add/name/" + urlEncode(name);
 
@@ -303,33 +311,31 @@ namespace Zello.API
 				command += "/invisible/" + ((bool)isHidden ? "true" : "false");
 			}
 
-			callAPI(command, HTTPMethod.GET, null, completionHandler);
+			return await callAPI(command, HTTPMethod.GET, null);
 		}
 
 		/// <summary>
 		/// Deletes channels.
 		/// </summary>
 		/// <param name="channelNames">names of the channels to remove.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void DeleteChannels(ArrayList channelNames, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> DeleteChannels(ArrayList channelNames)
 		{
 			string command = "channel/delete";
 
 			string parameters = implode("name[]=", "&name[]=", channelNames);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
 		/// Get channel roles (simple format).
 		/// </summary>
 		/// <param name="channelName">channel name.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void GetChannelsRoles(string channelName, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> GetChannelsRoles(string channelName)
 		{
 			string command = "channel/roleslist/name/" + urlEncode(channelName);
 
-			callAPI(command, HTTPMethod.GET, null, completionHandler);
+			return await callAPI(command, HTTPMethod.GET, null);
 		}
 
 		/// <summary>
@@ -338,15 +344,14 @@ namespace Zello.API
 		/// <param name="channelName">channel name.</param>
 		/// <param name="roleName">new role name.</param>
 		/// <param name="settings">role settings in JSON format: ["listen_only" : false, "no_disconnect" : true, "allow_alerts" : false, "to": ["dispatchers"]].</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void SaveChannelRole(string channelName, string roleName, Dictionary<string, object> settings, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> SaveChannelRole(string channelName, string roleName, Dictionary<string, object> settings)
 		{
 			string command = "channel/saverole/channel/" + urlEncode(channelName) + "/name/" + urlEncode(roleName);
 
 			string json = new JavaScriptSerializer().Serialize(settings);
 			string parameters = "settings=" + json;
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -354,14 +359,13 @@ namespace Zello.API
 		/// </summary>
 		/// <param name="channelName">channel name.</param>
 		/// <param name="roles">role names to delete.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void DeleteChannelRole(string channelName, ArrayList roles, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> DeleteChannelRole(string channelName, ArrayList roles)
 		{
 			string command = "channel/deleterole/channel/" + urlEncode(channelName);
 
 			string parameters = implode("roles[]=", "&roles[]=", roles);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
 		/// <summary>
@@ -370,18 +374,18 @@ namespace Zello.API
 		/// <param name="channelName">channel name.</param>
 		/// <param name="roleName">role name.</param>
 		/// <param name="users">usernames to add to role in channel.</param>
-		/// <param name="completionHandler">completion handler indicating success, response and error.</param>
-		public void AddToChannelRole(string channelName, string roleName, ArrayList users, ResultCompletionHandler completionHandler)
+		public async Task<ZelloAPIResult> AddToChannelRole(string channelName, string roleName, ArrayList users)
 		{
 			string command = "channel/addtorole/channel/" + urlEncode(channelName) + "/name/" + urlEncode(roleName);
 
 			string parameters = implode("login[]=", "&login[]=", users);
 
-			callAPI(command, HTTPMethod.POST, parameters, completionHandler);
+			return await callAPI(command, HTTPMethod.POST, parameters);
 		}
 
-		async void callAPI(string command, HTTPMethod method, string parameters, ResultCompletionHandler completionHandler)
+		async Task<ZelloAPIResult> callAPI(string command, HTTPMethod method, string parameters)
 		{
+			ZelloAPIResult returnResult;
 			string s = host + "/" + command;
 
 			if (SessionId != null)
@@ -416,13 +420,15 @@ namespace Zello.API
 					var json = (Dictionary<string, object>)new JavaScriptSerializer().DeserializeObject(result);
 
 					bool success = json != null && json["code"].Equals("200");
-					completionHandler.onResult(success, json, null);
+					returnResult = new ZelloAPIResult(success, json, null);
 				}
 			}
 			catch (WebException exception)
 			{
-				completionHandler.onResult(false, null, exception);
+				returnResult = new ZelloAPIResult(false, null, exception);
 			}
+
+			return returnResult;
 		}
 
 		string convertHTTPMethodToString(HTTPMethod method)
@@ -436,49 +442,6 @@ namespace Zello.API
 			}
 
 			return "";
-		}
-
-		public void onResult(bool success, Dictionary<string, object> response, Exception exception)
-		{
-			// On Main Thread
-			if (authenticationCompletionHandler != null)
-			{
-				if (!success)
-				{
-					authenticationCompletionHandler.onResult(false, response, null);
-					return;
-				}
-
-				if (response == null)
-				{
-					authenticationCompletionHandler.onResult(false, null, null);
-					return;
-				}
-
-				var token = (string)response["token"];
-
-				SessionId = (string)response["sid"];
-
-				if (apiKey == null)
-				{
-					authenticationCompletionHandler.onResult(false, response, null);
-				}
-
-				string hashedPassword = MD5Hash(MD5Hash(password) + token + apiKey);
-				string parameters = "username=" + username + "&password=" + hashedPassword;
-
-				callAPI("user/login", HTTPMethod.POST, parameters, authenticationCompletionHandler);
-
-				authenticationCompletionHandler = null;
-				username = null;
-				password = null;
-			}
-			else if (logoutCompletionHandler != null)
-			{
-				SessionId = null;
-				logoutCompletionHandler.onResult(success, response, exception);
-				logoutCompletionHandler = null;
-			}
 		}
 
 		string MD5Hash(string input)
@@ -538,14 +501,22 @@ namespace Zello.API
 	}
 
 	/// <summary>
-	/// Completion handler for making API Requests that returns a success indicator, a response dictionary and an exception.
-	/// A value for the error variable represents a client error. This is not the error returned by the API.
+	/// Completion Object for making API Requests that returns a success indicator, a response dictionary and an exception.
+	/// A value for the exception variable represents a client error. This is not the error returned by the API.
 	/// An error returned by the API can be retrieved through the response dictionary.
-	/// The onResult() method is executed on the main thread.
 	/// </summary>
-	public interface ResultCompletionHandler
+	public class ZelloAPIResult
 	{
-		void onResult(bool success, Dictionary<string, object> response, Exception exception);
+		public bool Success;
+		public Dictionary<string, object> Response;
+		public Exception Exception;
+
+		public ZelloAPIResult(bool success, Dictionary<string, object> response, Exception exception)
+		{
+			Success = success;
+			Response = response;
+			Exception = exception;
+		}
 	}
 
 	enum HTTPMethod
