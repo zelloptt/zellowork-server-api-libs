@@ -29,6 +29,8 @@ public class APITest {
 		api.authenticate(username, password, new ResultCompletionHandler() {
 			@Override
 			public void onResult(boolean success, JSONObject response, Exception exception) {
+				Log.w(TAG, "authenticate: " + Boolean.toString(success));
+
 				if (success) {
 					startTesting();
 				}
