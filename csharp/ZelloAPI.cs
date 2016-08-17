@@ -471,7 +471,17 @@ namespace Zello.API
 
 		string implode(string s, string glue, ArrayList pieces)
 		{
-			return s += string.Join(glue, pieces);
+			for (int i = 0; i < pieces.Count; i++)
+			{
+				s += urlEncode((string)pieces[i]);
+
+				if (i < pieces.Count - 1)
+				{
+					s += glue;
+				}
+			}
+
+			return s;
 		}
 
 		string createURLStringFromDictionary(Dictionary<string, string> dictionary)
