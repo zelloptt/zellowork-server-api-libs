@@ -114,26 +114,26 @@ public class APITest {
 
 								// Create channel role
 
-								Map<String, Object> channelRoleDictionary = new HashMap<>();
-								channelRoleDictionary.put("listen_only", false);
-								channelRoleDictionary.put("no_disconnect", true);
-								channelRoleDictionary.put("allow_alerts", false);
+								Map<String, Object> channelRoleMap = new HashMap<>();
+								channelRoleMap.put("listen_only", false);
+								channelRoleMap.put("no_disconnect", true);
+								channelRoleMap.put("allow_alerts", false);
 								String[] toArray = new String[]{};
-								channelRoleDictionary.put("to", toArray);
+								channelRoleMap.put("to", toArray);
 
-								api.saveChannelRole("Test channel", "Dispatcher", channelRoleDictionary, new ResultCompletionHandler() {
+								api.saveChannelRole("Test channel", "Dispatcher", channelRoleMap, new ResultCompletionHandler() {
 									@Override
 									public void onResult(boolean success, JSONObject response, Exception exception) {
 										Log.w(TAG, "saveChannelRole: " + Boolean.toString(success));
 
-										Map<String, Object> channelRoleDictionary = new HashMap<>();
-										channelRoleDictionary.put("listen_only", true);
-										channelRoleDictionary.put("no_disconnect", false);
-										channelRoleDictionary.put("allow_alerts", true);
+										Map<String, Object> channelRoleMap = new HashMap<>();
+										channelRoleMap.put("listen_only", true);
+										channelRoleMap.put("no_disconnect", false);
+										channelRoleMap.put("allow_alerts", true);
 										String[] toArray = new String[] { "Dispatcher" };
-										channelRoleDictionary.put("to", toArray);
+										channelRoleMap.put("to", toArray);
 
-										api.saveChannelRole("Test channel", "Driver", channelRoleDictionary, new ResultCompletionHandler() {
+										api.saveChannelRole("Test channel", "Driver", channelRoleMap, new ResultCompletionHandler() {
 											@Override
 											public void onResult(boolean success, JSONObject response, Exception exception) {
 												Log.w(TAG, "saveChannelRole: " + Boolean.toString(success));
