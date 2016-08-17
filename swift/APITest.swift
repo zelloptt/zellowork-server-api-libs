@@ -164,4 +164,3 @@ private extension String {
     return String(format: hash as String)
   }
 }
-

@@ -94,10 +94,9 @@ public class APITest {
 			public void onResult(boolean success, JSONObject response, Exception exception) {
 				Log.w(TAG, "addChannel: " + Boolean.toString(success));
 
+				// Add user to a channel
 				ArrayList<String> users = new ArrayList<>();
 				users.add("zelloapi_test");
-
-				// Add user to a channel
 				api.addToChannel("Test channel", users, new ResultCompletionHandler() {
 					@Override
 					public void onResult(boolean success, JSONObject response, Exception exception) {
