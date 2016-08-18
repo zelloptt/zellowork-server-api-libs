@@ -1,8 +1,4 @@
 //
-//  main.m
-//  APIWrapper
-//
-//  Created by Adam Bailey on 8/18/16.
 //  Copyright © 2016 Zello. All rights reserved.
 //
 
