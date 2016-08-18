@@ -21,6 +21,8 @@ public class APITest {
 
       if success {
         self?.startTesting()
+      } else {
+        print("Input the correct credentials for your network in ViewController.swift")
       }
     }
   }

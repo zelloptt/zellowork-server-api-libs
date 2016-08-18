@@ -32,6 +32,8 @@
     
     if (success) {
       [weakSelf startTesting];
+    } else {
+      NSLog(@"Input the correct credentials for your network in ViewController.m");
     }
   }];
 }
