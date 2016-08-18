@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
 		setContentView(R.layout.activity_main);
 
+		// Input your host url or IP address, your API key, and the administrative username/password combination.
 		apiTest = new APITest("", "", "", "");
 	}
 
