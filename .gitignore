@@ -3,3 +3,11 @@
 *.xcuserdata
 objective-c/APITest/APITest.xcodeproj/xcuserdata
 swift/APITest/APITest.xcodeproj/xcuserdata
+java/APITest/gradle.properties
+java/APITest/gradlew
+java/APITest/gradlew.bat
+java/APITest/.idea
+settings.gradle
+proguard-rules.pro
+java/APITest/gradle/wrapper/gradle-wrapper.jar
+java/APITest/gradle/wrapper/gradle-wrapper.properties

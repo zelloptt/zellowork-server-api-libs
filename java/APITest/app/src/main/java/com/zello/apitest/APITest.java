@@ -2,7 +2,7 @@
 //  Copyright © 2016 Zello. All rights reserved.
 //
 
-package com.zellowork.apiwrapper;
+package com.zello.apitest;
 
 import android.util.Log;
 
@@ -33,6 +33,8 @@ public class APITest {
 
 				if (success) {
 					startTesting();
+				} else {
+					Log.w(TAG, "Input the correct credentials for your network in MainActivity.java");
 				}
 			}
 		});
