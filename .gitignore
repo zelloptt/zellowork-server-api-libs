@@ -1,0 +1,4 @@
+*.xcworkspacedata
+*.xcscheme
+*.xcuserdata
+objective-c/APIWrapper/APIWrapper.xcodeproj/xcuserdata

@@ -30,7 +30,9 @@
   [self.api authenticate:username password:password completionBlock:^(BOOL success, NSDictionary *response, NSError *error) {
     NSLog(@"authenticate: %i", success);
     
-    [weakSelf startTesting];
+    if (success) {
+      [weakSelf startTesting];
+    }
   }];
 }
 
