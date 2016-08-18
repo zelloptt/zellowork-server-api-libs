@@ -17,8 +17,9 @@ public class APITest {
   
   private func authenticate(username: String, password: String) {
     api.authenticate(username, password: password) { [weak self] (success, response, error) in
+      print("authenticate: " + String(success))
+
       if success {
-        print("authenticate: " + String(success))
         self?.startTesting()
       }
     }
