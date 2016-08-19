@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 
 		// Input your host url or IP address, your API key, and the administrative username/password combination.
-		apiTest = new APITest("", "", "", "");
+		apiTest = new APITest("https://testing.zellowork.com/", "QSAEV6ZUGJ4BEJJNW49CUL6ALM70XGN7", "admin", "secret");
 	}
 
 }

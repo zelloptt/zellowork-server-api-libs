@@ -22,9 +22,9 @@ namespace APITest
         static async Task MainAsync()
         {
             // Input your host url or IP address and your API key.
-            apiTest = new APITest("", "");
+            apiTest = new APITest("https://testing.zellowork.com/", "QSAEV6ZUGJ4BEJJNW49CUL6ALM70XGN7");
             // Input the administrative username/password combination.
-            await apiTest.startTesting("", "");
+            await apiTest.startTesting("admin", "secret");
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
