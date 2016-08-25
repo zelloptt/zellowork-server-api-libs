@@ -48,3 +48,7 @@ The [`C#`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/maste
 
 ### Dependencies
 A reference to the `System.Web.Extensions` component is required for any project adding the `ZelloAPI.cs` class.
+
+##See also
+* [Zello for Work API reference](https://zellowork.com/api/)
+* [Zello for Work client SDK for Android](https://github.com/zelloptt/zello-android-client-sdk)
