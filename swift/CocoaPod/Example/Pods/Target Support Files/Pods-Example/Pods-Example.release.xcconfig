@@ -1,0 +1,14 @@
+EMBEDDED_CONTENT_CONTAINS_SWIFT = YES
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/ZelloAPISwift"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+OTHER_CFLAGS = $(inherited) -iquote "$PODS_CONFIGURATION_BUILD_DIR/ZelloAPISwift/ZelloAPISwift.framework/Headers"
+OTHER_LDFLAGS = $(inherited) -framework "ZelloAPISwift"
+OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
+PODS_BUILD_DIR = $BUILD_DIR
+PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_ROOT = ${SRCROOT}/Pods
+SWIFT_INCLUDE_PATHS[sdk=appletvos*] = $(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/appletvos/
+SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*] = $(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/appletvsimulator/
+SWIFT_INCLUDE_PATHS[sdk=iphoneos*] = $(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/iphoneos/
+SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*] = $(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/iphonesimulator/

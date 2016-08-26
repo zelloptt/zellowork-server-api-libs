@@ -270,3 +270,5 @@ java/APITest/gradle/wrapper/gradle-wrapper.properties
 *.userprefs
 csharp/APITest/APITest/bin/Debug
 csharp/APITest/APITest/obj
+swift/CocoaPod/ZelloAPISwift.xcodeproj/xcshareddata
+swift/CocoaPod/ZelloAPISwift.xcodeproj/xcuserdata

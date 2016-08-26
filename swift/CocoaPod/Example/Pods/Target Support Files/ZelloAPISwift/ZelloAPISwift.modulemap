@@ -1,0 +1,6 @@
+framework module ZelloAPISwift {
+  umbrella header "ZelloAPISwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
