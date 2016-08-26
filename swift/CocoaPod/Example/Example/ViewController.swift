@@ -6,16 +6,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
+  var apiTest: APITest!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-  }
 
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+    // Input your host url or IP address, your API key, and the administrative username/password combination.
+    apiTest = APITest(host: "https://testing.zellowork.com/", apiKey: "QSAEV6ZUGJ4BEJJNW49CUL6ALM70XGN7", username: "admin", password: "secret")
   }
-
 
 }
-

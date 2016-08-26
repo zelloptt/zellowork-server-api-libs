@@ -13,6 +13,7 @@
 		3521D8F11D6F3FF4003848EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3521D8EF1D6F3FF4003848EC /* Main.storyboard */; };
 		3521D8F31D6F3FF4003848EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3521D8F21D6F3FF4003848EC /* Assets.xcassets */; };
 		3521D8F61D6F3FF4003848EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3521D8F41D6F3FF4003848EC /* LaunchScreen.storyboard */; };
+		3572858B1D70E9510015D0A8 /* APITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3572858A1D70E9510015D0A8 /* APITest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		3521D8F21D6F3FF4003848EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3521D8F51D6F3FF4003848EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3521D8F71D6F3FF4003848EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3572858A1D70E9510015D0A8 /* APITest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITest.swift; sourceTree = "<group>"; };
 		7438849A8BC5B2709FC6F9F0 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		76A2B8121D09BD2537B66A6A /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		EC86D9977307BB882409298D /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +63,7 @@
 		3521D8EA1D6F3FF4003848EC /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				3572858A1D70E9510015D0A8 /* APITest.swift */,
 				3521D8EB1D6F3FF4003848EC /* AppDelegate.swift */,
 				3521D8ED1D6F3FF4003848EC /* ViewController.swift */,
 				3521D8EF1D6F3FF4003848EC /* Main.storyboard */,
@@ -212,6 +215,7 @@
 			files = (
 				3521D8EE1D6F3FF4003848EC /* ViewController.swift in Sources */,
 				3521D8EC1D6F3FF4003848EC /* AppDelegate.swift in Sources */,
+				3572858B1D70E9510015D0A8 /* APITest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
