@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   DESC
 
   s.homepage         = 'https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/swift/CocoaPod'
-  s.author           = { 'Zello' => 'dev@zello.com' }
+  s.author           = { 'Zello' => 'support@zello.com' }
   s.source           = { :git => 'https://github.com/zelloptt/zello-for-work-server-api-libs.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
