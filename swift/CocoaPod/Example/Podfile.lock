@@ -1,11 +1,11 @@
 PODS:
-  - ZelloAPISwift (1.0.2)
+  - ZelloAPISwift (1.0.3)
 
 DEPENDENCIES:
   - ZelloAPISwift
 
 SPEC CHECKSUMS:
-  ZelloAPISwift: 75224ede8c48d8d082aac7ce2ded90a12c9acaec
+  ZelloAPISwift: 7a1ee3029eb863852e0b586c867409c25898fc76
 
 PODFILE CHECKSUM: f31c4ab9d9efa27dabab6f973e9af0828d77d485
 
