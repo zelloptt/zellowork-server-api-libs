@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name             = 'ZelloAPISwift'
-  s.version          = '1.0.2'
+  s.version          = '1.0'
   s.summary          = 'ZelloAPISwift is a Zello for Work server API client library written in Swift.'
   s.license          = { :type => "MIT", :file => "LICENSE" }
 
