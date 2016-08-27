@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name             = 'ZelloAPISwift'
-  s.version          = '1.0'
+  s.version          = '1.0.3'
   s.summary          = 'ZelloAPISwift is a Zello for Work server API client library written in Swift.'
   s.license          = { :type => "MIT", :file => "LICENSE" }
 
@@ -14,7 +14,9 @@ Pod::Spec.new do |s|
 
   s.homepage         = 'https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/swift/CocoaPod'
   s.author           = { 'Zello' => 'support@zello.com' }
-  s.source           = { :git => 'https://github.com/zelloptt/zello-for-work-server-api-libs.git', :tag => s.version.to_s }
+
+  # Be mindful of this :tag. Remember to update it when releasing new versions.
+  s.source           = { :git => 'https://github.com/zelloptt/zello-for-work-server-api-libs.git', :tag => '1.0' }
 
   s.ios.deployment_target = '8.0'
 
