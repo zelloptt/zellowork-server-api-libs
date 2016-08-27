@@ -19,7 +19,8 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files    = "objective-c/CocoaPod/ZelloAPIObjC/*"
+  s.source_files    = "objective-c/CocoaPod/ZelloAPIObjC/*.{h,m}"
   s.requires_arc    = true
+  s.public_header_files = 'objective-c/CocoaPod/ZelloAPIObjC/*.h'
 
 end
