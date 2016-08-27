@@ -1,0 +1,6 @@
+framework module ZelloAPIObjC {
+  umbrella header "ZelloAPIObjC-umbrella.h"
+
+  export *
+  module * { export * }
+}
