@@ -15,12 +15,11 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/objective-c/CocoaPod'
   s.author           = { 'Zello' => 'support@zello.com' }
 
-  # Be mindful of this :tag. Remember to update it when releasing new versions.
   s.source           = { :git => 'https://github.com/zelloptt/zello-for-work-server-api-libs.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files    = "obective-c/CocoaPod/ZelloAPIObjC/*"
+  s.source_files    = "objective-c/CocoaPod/ZelloAPISwift/*"
   s.requires_arc    = true
 
 end
