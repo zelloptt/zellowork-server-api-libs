@@ -1,20 +1,20 @@
 <?php
 /**
- * Zello for Work server PHP API wrapper class. 
+ * ZelloWork server PHP API wrapper class.
  * 
- * The class provides an easy way to interact with Zello server
+ * This class provides an easy way to interact with Zello server
  * from your PHP code to add, modify and delete users and channels. 
  * Please note that all text values passed to the API must be in UTF-8 encoding 
  * and any text data returned are in UTF-8 as well.
  * 
- * @version 1.0.0
+ * @version 1.1
  * 
  */
 class ZelloServerAPI {
   /**
 	 * API version
 	 */
-	public $version = "1.0.0";
+	public $version = "1.1";
 	/**
 	 * Dataset returned by the most recent API call {Array}.
 	 * Use this array to retrieve the result of a successful API call, the field is not defined if the API call failed
