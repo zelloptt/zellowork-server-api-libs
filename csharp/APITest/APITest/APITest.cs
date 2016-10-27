@@ -134,7 +134,7 @@ namespace APITest
             Console.WriteLine("SaveChannelRole: " + result.Success);
 
             channelRoleDictionary = new Dictionary<string, object>();
-            channelRoleDictionary.Add("listen_only", true);
+            channelRoleDictionary.Add("listen_only", false);
             channelRoleDictionary.Add("no_disconnect", false);
             channelRoleDictionary.Add("allow_alerts", true);
             toArray = new string[] { "Dispatcher" };

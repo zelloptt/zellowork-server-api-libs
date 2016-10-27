@@ -106,7 +106,7 @@
           NSLog(@"saveChannelRole: %i", success);
 
           NSMutableDictionary *channelRoleDictionary = [[NSMutableDictionary alloc] init];
-          [channelRoleDictionary setValue:@(YES) forKeyPath:@"listen_only"];
+          [channelRoleDictionary setValue:@(NO) forKeyPath:@"listen_only"];
           [channelRoleDictionary setValue:@(NO) forKey:@"no_disconnect"];
           [channelRoleDictionary setValue:@(YES) forKey:@"allow_alerts"];
           NSArray *toArray = [[NSArray alloc] initWithObjects:@"Dispatcher", nil];

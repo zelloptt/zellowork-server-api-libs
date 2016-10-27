@@ -129,7 +129,7 @@ public class APITest {
 										Log.w(TAG, "saveChannelRole: " + Boolean.toString(success));
 
 										Map<String, Object> channelRoleMap = new HashMap<>();
-										channelRoleMap.put("listen_only", true);
+										channelRoleMap.put("listen_only", false);
 										channelRoleMap.put("no_disconnect", false);
 										channelRoleMap.put("allow_alerts", true);
 										String[] toArray = new String[] { "Dispatcher" };

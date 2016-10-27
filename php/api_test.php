@@ -108,7 +108,7 @@ if (!$ltapi->saveChannelRole("Test channel", "Dispatcher", array(
 	echo("<br/>Created a Dispatcher channel role");
 }
 
-if (!$ltapi->saveChannelRole("Test channel", "Driver", '{"listen_only":true, "no_disconnect":false, "allow_alerts": true, "to":["Dispatcher"]}')) {
+if (!$ltapi->saveChannelRole("Test channel", "Driver", '{"listen_only":false, "no_disconnect":false, "allow_alerts": true, "to":["Dispatcher"]}')) {
         echo("<br/>saveChannelRole error: ".$ltapi->errorCode." ".$ltapi->errorDescription);
         echo("<br/>request: ".$ltapi->lastUrl);
 } else {
