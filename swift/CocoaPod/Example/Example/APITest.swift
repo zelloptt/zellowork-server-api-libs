@@ -3,10 +3,10 @@
 //
 
 import Foundation
-import CommonCrypto
 import ZelloAPISwift
+import CommonCrypto
 
-public class APITest {
+open class APITest {
   
   var api: ZelloAPI!
   
@@ -17,7 +17,7 @@ public class APITest {
     authenticate(username, password: password)
   }
   
-  private func authenticate(username: String, password: String) {
+  fileprivate func authenticate(_ username: String, password: String) {
     api.authenticate(username, password: password) { [weak self] (success, response, error) in
       print("authenticate: " + String(success))
 
@@ -29,7 +29,7 @@ public class APITest {
     }
   }
   
-  private func startTesting() {
+  fileprivate func startTesting() {
     api.getUsers { [weak self] (success, response, error) in
       print("getUsers: " + String(success))
 
@@ -63,7 +63,7 @@ public class APITest {
     }
   }
   
-  private func continueTesting() {
+  fileprivate func continueTesting() {
     // Add channel
     api.addChannel("Test channel") { [weak self] (success, response, error) in
       print("addChannel: " + String(success))
@@ -84,21 +84,21 @@ public class APITest {
           // Create channel role
           
           var channelRoleDictionary = [String : AnyObject]()
-          channelRoleDictionary["listen_only"] = false
-          channelRoleDictionary["no_disconnect"] = true
-          channelRoleDictionary["allow_alerts"] = false
-          var toArray = []
-          channelRoleDictionary["to"] = toArray
+          channelRoleDictionary["listen_only"] = false as AnyObject?
+          channelRoleDictionary["no_disconnect"] = true as AnyObject?
+          channelRoleDictionary["allow_alerts"] = false as AnyObject?
+          var toArray: [AnyObject] = []
+          channelRoleDictionary["to"] = toArray as AnyObject?
           
           self?.api.saveChannelRole("Test channel", roleName: "Dispatcher", settings: channelRoleDictionary, completionHandler: { (success, response, error) in
             print("saveChannelRole: " + String(success))
 
             channelRoleDictionary = [String : AnyObject]()
-            channelRoleDictionary["listen_only"] = true
-            channelRoleDictionary["no_disconnect"] = false
-            channelRoleDictionary["allow_alerts"] = true
-            toArray = ["Dispatcher"]
-            channelRoleDictionary["to"] = toArray
+            channelRoleDictionary["listen_only"] = false as AnyObject?
+            channelRoleDictionary["no_disconnect"] = false as AnyObject?
+            channelRoleDictionary["allow_alerts"] = true as AnyObject?
+            toArray = ["Dispatcher" as AnyObject]
+            channelRoleDictionary["to"] = toArray as AnyObject?
             
             self?.api.saveChannelRole("Test channel", roleName: "Driver", settings: channelRoleDictionary, completionHandler: { (success, response, error) in
               print("saveChannelRole: " + String(success))
@@ -120,7 +120,7 @@ public class APITest {
     }
   }
   
-  private func cleanUp() {
+  fileprivate func cleanUp() {
     // Remove the channel
     let channelNames = ["Test channel"]
     api.deleteChannels(channelNames) { [weak self] (success, response, error) in
@@ -149,13 +149,13 @@ private extension String {
   
   /// Calculates the MD5 hash of a string.
   func MD5() -> String {
-    guard let str = cStringUsingEncoding(NSUTF8StringEncoding) else {
+    guard let str = cString(using: String.Encoding.utf8) else {
       return ""
     }
     
-    let strLen = CC_LONG(lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+    let strLen = CC_LONG(lengthOfBytes(using: String.Encoding.utf8))
     let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-    let result = UnsafeMutablePointer<CUnsignedChar>.alloc(digestLen)
+    let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
     
     CC_MD5(str, strLen, result)
     
@@ -164,7 +164,7 @@ private extension String {
       hash.appendFormat("%02x", result[i])
     }
     
-    result.dealloc(digestLen)
+    result.deallocate(capacity: digestLen)
     
     return String(format: hash as String)
   }

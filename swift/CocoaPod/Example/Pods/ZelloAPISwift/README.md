@@ -9,6 +9,8 @@ There are five client libraries included in this repository:
 4. [`Java`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/java)
 5. [`C#`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/csharp)
 
+In addition, we offer our Swift and Objective C libraries available as [`CocoaPods.`](https://cocoapods.org)
+
 Each library provides a ZelloAPI class and an test for the ZelloAPI. For the Swift, Objective C, Java and C# libraries, this test comes in the form of a project titled `APITest`. These projects will output the results of the `APITest` to the console.
 
 ## PHP Library
@@ -17,11 +19,21 @@ The [`PHP`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/mast
 To use `api_test.php`, replace the $host variable, the $apikey variable and replace the username and password strings in the `auth` method. Then, simply run the script and view the output.
 
 ## Swift Library
+### CocoaPod
+The [`Swift`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/swift/CocoaPod) CocoaPod creates a `ZelloAPISwift` module that can be imported into any Swift file that wishes to access the Zello for Work API.
+
+To install, add `pod ZelloAPISwift` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/swift/CocoaPod/Example)
+
+#### Dependencies
+- Swift 2.2.
+- Minimum iOS Version: 8.0
+
+### Manual Installation
 The [`Swift`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/swift) library includes a `ZelloAPI.swift` file and a test project `APITest` to test the functionality of the `ZelloAPI.swift` class.
 
 `APITest` is an iOS app project that can be run using Xcode on macOS. Open `ViewController.swift` and replace the `APITest` constructor Strings with the hostname, API key, username, and password. Then, simply run the project and view the output.
 
-### Dependencies
+#### Dependencies
 - The Swift library includes a reference to `CommonCrypto`, a C library, for the MD5 hashing of login credentials. Unfortunately, due to Swift limitations, C libraries cannot be simply imported.
 Instead, Swift provides a method of importing C code through [`Bridging Headers`](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html).
 **Any project using the `ZelloAPI.swift` class will need to having a bridging header with the following import:** `#import <CommonCrypto/CommonCrypto.h>`
@@ -29,11 +41,20 @@ Instead, Swift provides a method of importing C code through [`Bridging Headers`
 - Minimum iOS Version: 7.0
 
 ## Objective C Library
+### CocoaPod
+The [`Objective C`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/objective-c/CocoaPod) CocoaPod creates a `ZelloAPIObjC` module that can be imported into any Objective C file that wishes to access the Zello for Work API.
+
+To install, add `pod ZelloAPIObjC` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/objective-c/CocoaPod/Example)
+
+#### Dependencies
+- Minimum iOS Version: 8.0
+
+### Manual Installation
 The [`Objective C`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/objective-c) library includes `ZelloAPI.h` and `ZelloAPI.m` files and a test project `APITest` to test the functionality of the `ZelloAPI` class.
 
 `APITest` is an iOS app project that can be run using Xcode on macOS. Open `ViewController.m` and replace the `APITest` constructor NSStrings with the hostname, API key, username, and password. Then, simply run the project and view the output.
 
-### Dependencies
+#### Dependencies
 - Minimum iOS Version: 7.0
 
 ## Java Library
@@ -49,6 +70,6 @@ The [`C#`](https://github.com/zelloptt/zello-for-work-server-api-libs/tree/maste
 ### Dependencies
 A reference to the `System.Web.Extensions` component is required for any project adding the `ZelloAPI.cs` class.
 
-##See also
+## See also
 * [Zello for Work API reference](https://zellowork.com/api/)
 * [Zello for Work client SDK for Android](https://github.com/zelloptt/zello-android-client-sdk)
