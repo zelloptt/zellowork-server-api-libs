@@ -7,14 +7,14 @@
  * Please note that all text values passed to the API must be in UTF-8 encoding 
  * and any text data returned are in UTF-8 as well.
  * 
- * @version 1.1
+ * @version 1.1.0
  * 
  */
 class ZelloServerAPI {
   /**
 	 * API version
 	 */
-	public $version = "1.1";
+	public $version = "1.1.0";
 	/**
 	 * Dataset returned by the most recent API call {Array}.
 	 * Use this array to retrieve the result of a successful API call, the field is not defined if the API call failed

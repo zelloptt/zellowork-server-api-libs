@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, HTTPMethod) {
   
 @implementation ZelloAPI
 
-static NSString *version = @"1.1";
+static NSString *version = @"1.1.0";
 
 #pragma mark Version
 

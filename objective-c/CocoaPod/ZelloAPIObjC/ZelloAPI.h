@@ -18,7 +18,7 @@ typedef void (^ResultCompletionBlock)(BOOL,  NSDictionary * _Nullable , NSError 
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
  
- - Version 1.1
+ - Version 1.1.0
  - Minimum iOS Version 8.0
  */
 @interface ZelloAPI : NSObject

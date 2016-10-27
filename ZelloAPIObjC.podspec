@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
 
   s.name             = 'ZelloAPIObjC'
-  s.version          = '1.1'
-  s.summary          = 'ZelloAPIObjC is a Zello for Work server API client library written in Objective C.'
+  s.version          = '1.1.0'
+  s.summary          = 'ZelloAPIObjC is a ZelloWork server API client library written in Objective C.'
   s.license          = { :type => "MIT", :file => "LICENSE" }
 
   s.description      =
@@ -12,10 +12,10 @@ Pod::Spec.new do |s|
   Each response includes "status" and "code" fields, indicating the response success status or error details. In the case of success, code is "200" and status is "OK".
   DESC
 
-  s.homepage         = 'https://github.com/zelloptt/zello-for-work-server-api-libs/tree/master/objective-c/CocoaPod'
+  s.homepage         = 'https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod'
   s.author           = { 'Zello' => 'support@zello.com' }
 
-  s.source           = { :git => 'https://github.com/zelloptt/zello-for-work-server-api-libs.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/zelloptt/zellowork-server-api-libs.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 

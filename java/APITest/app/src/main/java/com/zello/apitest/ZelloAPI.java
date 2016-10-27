@@ -30,7 +30,7 @@ import java.util.Map;
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
 
- - Version 1.1
+ - Version 1.1.0
  */
 public class ZelloAPI {
 
@@ -39,7 +39,7 @@ public class ZelloAPI {
 	}
 
 	/// API Version
-	public static String version = "1.1";
+	public static String version = "1.1.0";
 
 	/// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
 	public String sessionId;

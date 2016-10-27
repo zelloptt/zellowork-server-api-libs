@@ -20,14 +20,14 @@ namespace Zello.API
 	/// from your C# code to add, modify and delete users and channels.
 	/// Please note that all text values passed to the API must be in UTF-8 encoding
 	/// and any text data returned are in UTF-8 as well.
-	/// - Version 1.1
+	/// - Version 1.1.0
 	/// </summary>
 	public class ZelloAPI
 	{
 		/// <summary>
 		/// API Version
 		/// </summary>
-		public static string Version = "1.1";
+		public static string Version = "1.1.0";
 
 		/// <summary>
 		/// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
