@@ -19,7 +19,7 @@ public typealias ResultCompletionHandler = (Bool, [String : AnyObject]?, NSError
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
 
- - Version 1.1
+ - Version 1.1.0
  - Swift Version 3.0
  - Minimum iOS Version 8.0
 */
@@ -28,7 +28,7 @@ open class ZelloAPI {
   // MARK: Public Variables
   
   /// API Version
-  open static let version = "1.1"
+  open static let version = "1.1.0"
   
   /// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
   open var sessionId: String?
