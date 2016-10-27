@@ -11,36 +11,36 @@ import Foundation
 public typealias ResultCompletionHandler = (Bool, [String : AnyObject]?, NSError?) -> Void
 
 /**
- Zello for Work server Swift API wrapper class.
+ ZelloWork server Swift API wrapper class.
 
- The class provides an easy way to interact with Zello for Work server
+ This class provides an easy way to interact with the ZelloWork server
  from your Swift code to add, modify and delete users and channels.
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
 
- - Version 1.0.0
- - Swift Version 2.2
+ - Version 1.1
+ - Swift Version 3.0
  - Minimum iOS Version 7.0
 */
-public class ZelloAPI {
+open class ZelloAPI {
   
   // MARK: Public Variables
   
   /// API Version
-  public static let version = "1.0.0"
+  open static let version = "1.1"
   
   /// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
-  public var sessionId: String?
+  open var sessionId: String?
   
   /// Last accessed API URL. Useful for API troubleshooting.
-  public var lastURL: String?
+  open var lastURL: String?
   
   // MARK: Private Variables
   
   /// Server hostname or IP address
-  private var host: String?
+  fileprivate var host: String?
   /// API Key
-  private var apiKey: String?
+  fileprivate var apiKey: String?
   
   // MARK: Initializer
   
@@ -65,7 +65,7 @@ public class ZelloAPI {
    - parameter password:          administrative password
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func authenticate(username: String, password: String, completionHandler: ResultCompletionHandler) {
+  open func authenticate(_ username: String, password: String, completionHandler: @escaping ResultCompletionHandler) {
     callAPI("user/gettoken", httpMethod: .GET, completionHandler: { [weak self] (success, response, error) -> Void in
       // On main thread
       guard let weakSelf = self else {
@@ -108,7 +108,7 @@ public class ZelloAPI {
    
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func logout(completionHandler: ResultCompletionHandler) {
+  open func logout(_ completionHandler: @escaping ResultCompletionHandler) {
     callAPI("user/logout", httpMethod: .GET, completionHandler: { [weak self] (success, response, error) -> Void in
       self?.sessionId = nil
       
@@ -126,7 +126,7 @@ public class ZelloAPI {
    - parameter channel:           channel name.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func getUsers(username: String?=nil, isGateway: Bool?=false, max: Int?=nil, start: Int?=nil, channel: String?=nil, completionHandler: ResultCompletionHandler) {
+  open func getUsers(_ username: String?=nil, isGateway: Bool?=false, max: Int?=nil, start: Int?=nil, channel: String?=nil, completionHandler: @escaping ResultCompletionHandler) {
     var command = "user/get"
     
     if let username = username {
@@ -135,7 +135,7 @@ public class ZelloAPI {
     if let channel = channel {
       command += "/channel/" + channel.urlEncode()
     }
-    if let isGateway = isGateway where isGateway {
+    if let isGateway = isGateway , isGateway {
       command += "/gateway/1"
     }
     if let max = max {
@@ -156,7 +156,7 @@ public class ZelloAPI {
    - parameter start:             start index of results to fetch.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func getChannels(name: String?=nil, max: Int?=nil, start: Int?=nil, completionHandler: ResultCompletionHandler) {
+  open func getChannels(_ name: String?=nil, max: Int?=nil, start: Int?=nil, completionHandler: @escaping ResultCompletionHandler) {
     var command = "channel/get"
     
     if let name = name {
@@ -179,7 +179,7 @@ public class ZelloAPI {
    - parameter users:       usernames of the users to add.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func addToChannel(channelName: String, users: [String], completionHandler: ResultCompletionHandler) {
+  open func addToChannel(_ channelName: String, users: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "user/addto/" + channelName.urlEncode()
     
     let parameters = "login[]=".implode("&login[]=", pieces: users)
@@ -194,7 +194,7 @@ public class ZelloAPI {
    - parameter users:             usernames of the users to add.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func addToChannels(channelNames: [String], users: [String], completionHandler: ResultCompletionHandler) {
+  open func addToChannels(_ channelNames: [String], users: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "user/addtochannels"
     
     var parameters = "users[]=".implode("&users[]=", pieces: users)
@@ -210,7 +210,7 @@ public class ZelloAPI {
    - parameter users:             usernames of the users to remove from the channel.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func removeFromChannel(channelName: String, users: [String], completionHandler: ResultCompletionHandler) {
+  open func removeFromChannel(_ channelName: String, users: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "user/removefrom/" + channelName.urlEncode()
     
     let parameters = "login[]=".implode("&login[]=", pieces: users)
@@ -225,7 +225,7 @@ public class ZelloAPI {
    - parameter users:             usernames of the users to remove from channels.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func removeFromChannels(channelNames: [String], users: [String], completionHandler: ResultCompletionHandler) {
+  open func removeFromChannels(_ channelNames: [String], users: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "user/removefromchannels"
     
     var parameters = "users[]=".implode("&users[]=", pieces: users)
@@ -256,7 +256,7 @@ public class ZelloAPI {
    - parameter user:              dictionary of user attributes.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func saveUser(user: [String : String], completionHandler: ResultCompletionHandler) {
+  open func saveUser(_ user: [String : String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "user/save"
     
     let parameters = createURLStringFromDictionary(user)
@@ -272,7 +272,7 @@ public class ZelloAPI {
    - parameter users:             usernames of the users to remove.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func deleteUsers(users: [String], completionHandler: ResultCompletionHandler) {
+  open func deleteUsers(_ users: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "user/delete"
     
     let parameters = "login[]=".implode("&login[]=", pieces: users)
@@ -288,7 +288,7 @@ public class ZelloAPI {
    - parameter isHidden:          when set to true in combination with isGroup set to true, a hidden group channel is created.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func addChannel(name: String, isGroup: Bool?=nil, isHidden: Bool?=nil, completionHandler: ResultCompletionHandler) {
+  open func addChannel(_ name: String, isGroup: Bool?=nil, isHidden: Bool?=nil, completionHandler: @escaping ResultCompletionHandler) {
     var command = "channel/add/name/" + name.urlEncode()
     
     if let isGroup = isGroup {
@@ -307,7 +307,7 @@ public class ZelloAPI {
    - parameter channelNames:      names of the channels to remove.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func deleteChannels(channelNames: [String], completionHandler: ResultCompletionHandler) {
+  open func deleteChannels(_ channelNames: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "channel/delete"
     
     let parameters = "name[]=".implode("&name[]=", pieces: channelNames)
@@ -321,7 +321,7 @@ public class ZelloAPI {
    - parameter channelName:       channel name.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func getChannelsRoles(channelName: String, completionHandler: ResultCompletionHandler) {
+  open func getChannelsRoles(_ channelName: String, completionHandler: @escaping ResultCompletionHandler) {
     let command = "channel/roleslist/name/" + channelName.urlEncode()
     
     callAPI(command, httpMethod: .GET, completionHandler: completionHandler)
@@ -335,13 +335,13 @@ public class ZelloAPI {
    - parameter settings:          role settings in JSON format: ["listen_only" : false, "no_disconnect" : true, "allow_alerts" : false, "to": ["dispatchers"]]
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func saveChannelRole(channelName: String, roleName: String, settings: [String : AnyObject], completionHandler: ResultCompletionHandler) {
+  open func saveChannelRole(_ channelName: String, roleName: String, settings: [String : AnyObject], completionHandler: @escaping ResultCompletionHandler) {
     let command = "channel/saverole/channel/" + channelName.urlEncode() + "/name/" + roleName.urlEncode()
     
     var parameters: String?
     do {
-      let data = try NSJSONSerialization.dataWithJSONObject(settings, options: NSJSONWritingOptions(rawValue: 0))
-      if let dataString = String(data: data, encoding: NSUTF8StringEncoding) {
+      let data = try JSONSerialization.data(withJSONObject: settings, options: JSONSerialization.WritingOptions(rawValue: 0))
+      if let dataString = String(data: data, encoding: String.Encoding.utf8) {
         parameters = "settings=" + dataString
       }
     } catch {
@@ -358,7 +358,7 @@ public class ZelloAPI {
    - parameter roles:             role names to delete.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func deleteChannelRole(channelName: String, roles: [String], completionHandler: ResultCompletionHandler) {
+  open func deleteChannelRole(_ channelName: String, roles: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "channel/deleterole/channel/" + channelName.urlEncode()
     
     let parameters = "roles[]=".implode("&roles[]=", pieces: roles)
@@ -374,7 +374,7 @@ public class ZelloAPI {
    - parameter users:             usernames to add to role in channel.
    - parameter completionHandler: completion handler indicating success, response and error.
    */
-  public func addToChannelRole(channelName: String, roleName: String, users: [String], completionHandler: ResultCompletionHandler) {
+  open func addToChannelRole(_ channelName: String, roleName: String, users: [String], completionHandler: @escaping ResultCompletionHandler) {
     let command = "channel/addtorole/channel/" + channelName.urlEncode() + "/name/" + roleName.urlEncode()
     
     let parameters = "login[]=".implode("&login[]=", pieces: users)
@@ -384,15 +384,15 @@ public class ZelloAPI {
   
   // MARK: Private Methods
   
-  private func callAPI(command: String, httpMethod: HTTPMethod, parameters: String?=nil, completionHandler: ResultCompletionHandler) {
-    let session = NSURLSession.sharedSession()
+  fileprivate func callAPI(_ command: String, httpMethod: HTTPMethod, parameters: String?=nil, completionHandler: @escaping ResultCompletionHandler) {
+    let session = URLSession.shared
     
     guard let host = host else {
       return
     }
     
     var prefix = "http://"
-    if host.containsString("http://") || host.containsString("https://") {
+    if host.contains("http://") || host.contains("https://") {
       prefix = ""
     }
     
@@ -404,70 +404,70 @@ public class ZelloAPI {
     
     lastURL = urlString
     
-    guard let nsURL = NSURL(string: urlString) else {
-      dispatch_async(dispatch_get_main_queue(), { 
+    guard let nsURL = URL(string: urlString) else {
+      DispatchQueue.main.async {
         completionHandler(false, nil, NSError.unknownError())
-      })
+      }
       return
     }
     
-    let request = NSMutableURLRequest(URL: nsURL)
-    request.HTTPMethod = httpMethod.rawValue
+    let request = NSMutableURLRequest(url: nsURL as URL)
+    request.httpMethod = httpMethod.rawValue
     
     if let parameters = parameters {
       request.setBodyContentFromString(parameters)
     }
     
-    session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+    session.dataTask(with: request as URLRequest) { (data, response, error) -> Void in
       if error == nil {
         guard let data = data else {
-          dispatch_async(dispatch_get_main_queue(), { 
+          DispatchQueue.main.async {
             completionHandler(false, nil, NSError.unknownError())
-          })
+          }
           return
         }
         
         var responseDictionary: [String : AnyObject]?
         do {
-          responseDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0)) as? [String : AnyObject]
+          responseDictionary = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0)) as? [String : AnyObject]
         } catch let error as NSError {
-          dispatch_async(dispatch_get_main_queue(), { 
+          DispatchQueue.main.async {
             completionHandler(false, nil, error)
-          })
+          }
           return
         }
         
         guard let unwrappedResponseDictionary = responseDictionary else {
-          dispatch_async(dispatch_get_main_queue(), {
+          DispatchQueue.main.async {
             completionHandler(false, nil, NSError.unknownError())
-          })
+          }
           return
         }
         
         guard let statusCode = unwrappedResponseDictionary["code"] as? String else {
-          dispatch_async(dispatch_get_main_queue(), {
+          DispatchQueue.main.async {
             completionHandler(false, unwrappedResponseDictionary, NSError.unknownError())
-          })
+          }
           return
         }
         
         let success = statusCode == "200"
-        dispatch_async(dispatch_get_main_queue(), { 
+        DispatchQueue.main.async {
           completionHandler(success, unwrappedResponseDictionary, nil)
-        })
+        }
         return
       } else {
-        dispatch_async(dispatch_get_main_queue(), { 
+        DispatchQueue.main.async {
           completionHandler(false, nil, NSError.unknownError())
-        })
+        }
         return
       }
     }.resume()
   }
   
-  private func createURLStringFromDictionary(dictionary: [String : String]) -> String {
+  fileprivate func createURLStringFromDictionary(_ dictionary: [String : String]) -> String {
     var string = ""
-    for (index, key) in dictionary.keys.enumerate() {
+    for (index, key) in dictionary.keys.enumerated() {
       if index == 0 {
         string += key + "=" + dictionary[key]!.urlEncode()
       } else {
@@ -510,13 +510,13 @@ private extension String {
   
   /// Calculates the MD5 hash of a string.
   func MD5() -> String {
-    guard let str = cStringUsingEncoding(NSUTF8StringEncoding) else {
+    guard let str = cString(using: String.Encoding.utf8) else {
       return ""
     }
     
-    let strLen = CC_LONG(lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+    let strLen = CC_LONG(lengthOfBytes(using: String.Encoding.utf8))
     let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-    let result = UnsafeMutablePointer<CUnsignedChar>.alloc(digestLen)
+    let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
     
     CC_MD5(str, strLen, result)
     
@@ -525,14 +525,14 @@ private extension String {
       hash.appendFormat("%02x", result[i])
     }
     
-    result.dealloc(digestLen)
+    result.deallocate(capacity: digestLen)
     
     return String(format: hash as String)
   }
   
   /// URL encodes a string.
   func urlEncode() -> String {
-    if let string = stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet()) {
+    if let string = addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) {
       return string
     }
     
@@ -542,10 +542,10 @@ private extension String {
   /**
    Join array elements with a glue string. URL encodes all pieces.
    */
-  func implode(glue: String, pieces: [String]) -> String {
+  func implode(_ glue: String, pieces: [String]) -> String {
     var string = self
     
-    for (index, piece) in pieces.enumerate() {
+    for (index, piece) in pieces.enumerated() {
       string += piece.urlEncode()
       
       if (index < pieces.count - 1) {
@@ -565,8 +565,8 @@ private extension NSMutableURLRequest {
    
    - parameter string: string to encode into HTTPBody.
    */
-  func setBodyContentFromString(string: String) {
-    HTTPBody = string.dataUsingEncoding(NSUTF8StringEncoding)
+  func setBodyContentFromString(_ string: String) {
+    httpBody = string.data(using: String.Encoding.utf8)
     
     addValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
   }

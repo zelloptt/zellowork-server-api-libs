@@ -22,6 +22,14 @@ typedef NS_ENUM(NSInteger, HTTPMethod) {
   
 @implementation ZelloAPI
 
+static NSString *version = @"1.1";
+
+#pragma mark Version
+
++ (NSString *)version {
+  return version;
+}
+
 #pragma mark Initializer
 
 - (id)initWithHost:(NSString *)host apiKey:(NSString *)apiKey {

@@ -15,19 +15,19 @@ using System.Security.Cryptography;
 namespace Zello.API
 {
 	/// <summary>
-	/// Zello for Work server C# API wrapper class.
-	/// The class provides an easy way to interact with Zello for Work server
+	/// ZelloWork server C# API wrapper class.
+	/// This class provides an easy way to interact with the ZelloWork server
 	/// from your C# code to add, modify and delete users and channels.
 	/// Please note that all text values passed to the API must be in UTF-8 encoding
 	/// and any text data returned are in UTF-8 as well.
-	/// - Version 1.0.0
+	/// - Version 1.1
 	/// </summary>
 	public class ZelloAPI
 	{
 		/// <summary>
 		/// API Version
 		/// </summary>
-		public static string Version = "1.0.0";
+		public static string Version = "1.1";
 
 		/// <summary>
 		/// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.

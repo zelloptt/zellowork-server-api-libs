@@ -1,13 +1,11 @@
 <?php
 /**
-* Zello for Work server API sandbox 
-* 
-* 
+* ZelloWork server API sandbox
 */
 error_reporting( E_ALL ); 
-require("./zello_server_api.class.php"); // Zello for Work API wrapper
+require("./zello_server_api.class.php"); // ZelloWork API wrapper
 
-$host = "https://testing.zellowork.com/";	// your Zello for Network URL hostname
+$host = "https://testing.zellowork.com/";	// your ZelloWork network URL hostname
 $apikey = "QSAEV6ZUGJ4BEJJNW49CUL6ALM70XGN7"; // your API key
 
 $ltapi = new ZelloServerAPI($host, $apikey);
@@ -110,7 +108,7 @@ if (!$ltapi->saveChannelRole("Test channel", "Dispatcher", array(
 	echo("<br/>Created a Dispatcher channel role");
 }
 
-if (!$ltapi->saveChannelRole("Test channel", "Driver", '{"listen_only":true, "no_disconnect":false, "allow_alerts": true, "to":["Dispatcher"]}')) {
+if (!$ltapi->saveChannelRole("Test channel", "Driver", '{"listen_only":false, "no_disconnect":false, "allow_alerts": true, "to":["Dispatcher"]}')) {
         echo("<br/>saveChannelRole error: ".$ltapi->errorCode." ".$ltapi->errorDescription);
         echo("<br/>request: ".$ltapi->lastUrl);
 } else {
