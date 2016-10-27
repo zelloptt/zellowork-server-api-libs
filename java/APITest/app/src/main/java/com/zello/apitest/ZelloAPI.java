@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- Zello for Work server Java API wrapper class.
+ ZelloWork server Java API wrapper class.
 
- The class provides an easy way to interact with Zello for Work server
+ This class provides an easy way to interact with the ZelloWork server
  from your Java code to add, modify and delete users and channels.
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
 
- - Version 1.0.0
+ - Version 1.1
  */
 public class ZelloAPI {
 
@@ -39,7 +39,7 @@ public class ZelloAPI {
 	}
 
 	/// API Version
-	public static String version = "1.0.0";
+	public static String version = "1.1";
 
 	/// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
 	public String sessionId;
