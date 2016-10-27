@@ -19,7 +19,7 @@ typedef void (^ResultCompletionBlock)(BOOL,  NSDictionary * _Nullable , NSError 
  and any text data returned are in UTF-8 as well.
  
  - Version 1.1
- - Minimum iOS Version 7.0
+ - Minimum iOS Version 8.0
  */
 @interface ZelloAPI : NSObject
 
