@@ -37,7 +37,7 @@ The [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/
 - The Swift library includes a reference to `CommonCrypto`, a C library, for the MD5 hashing of login credentials. Unfortunately, due to Swift limitations, C libraries cannot be simply imported.
 Instead, Swift provides a method of importing C code through [`Bridging Headers`](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html).
 **Any project using the `ZelloAPI.swift` class will need to having a bridging header with the following import:** `#import <CommonCrypto/CommonCrypto.h>`
-- Swift 3. For those wishing to target Swift 2.2, the source code can be found [`here`](https://github.com/zelloptt/zellowork-server-api-libs/blob/e62401243864f17314f052911b47706a01f8e826/swift/ZelloAPI.swift)
+- Swift 3. For those wishing to target Swift 2.2, the source code can be found [`here.`](https://github.com/zelloptt/zellowork-server-api-libs/blob/e62401243864f17314f052911b47706a01f8e826/swift/ZelloAPI.swift)
 - Minimum iOS Version: 7.0
 
 ## Objective C Library
