@@ -44,7 +44,7 @@ Instead, Swift provides a method of importing C code through [`Bridging Headers`
 ### CocoaPod
 The [`Objective C`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod) CocoaPod creates a `ZelloAPIObjC` module that can be imported into any Objective C file that wishes to access the ZelloWork API.
 
-To install, add `pod ZelloAPIObjC` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod/Example)
+To install, add `pod 'ZelloAPIObjC'` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod/Example)
 
 #### Dependencies
 - Minimum iOS Version: 8.0
