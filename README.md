@@ -22,7 +22,7 @@ To use `api_test.php`, replace the $host variable, the $apikey variable and repl
 ### CocoaPod
 The [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift/CocoaPod) CocoaPod creates a `ZelloAPISwift` module that can be imported into any Swift file that wishes to access the ZelloWork API.
 
-To install using Swift 3, add `pod ZelloAPISwift` to your Podfile. To use Swift 2.2, add `pod 'ZelloAPISwift', '1.0.3'` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift/CocoaPod/Example)
+To install using Swift 3, add `pod 'ZelloAPISwift'` to your Podfile. To use Swift 2.2, add `pod 'ZelloAPISwift', '1.0.3'` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift/CocoaPod/Example)
 
 #### Dependencies
 - Swift 2.2 or higher.
