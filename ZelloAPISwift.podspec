@@ -24,10 +24,7 @@ Pod::Spec.new do |s|
   s.source_files    = "swift/CocoaPod/ZelloAPISwift/*"
   s.requires_arc    = true
 
-s.xcconfig          = { 'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]' => '$(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/iphonesimulator/',
-                        'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]' => '$(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/iphoneos/',
-                        'SWIFT_INCLUDE_PATHS[sdk=appletvos*]' => '$(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/appletvos/',
-                        'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]' => '$(PODS_ROOT)/ZelloAPISwift/swift/CocoaPod/CommonCrypto/appletvsimulator/' }
+s.xcconfig          = {  }
 
   s.prepare_command = <<-CMD
                         mkdir -p CommonCrypto/iphoneos
