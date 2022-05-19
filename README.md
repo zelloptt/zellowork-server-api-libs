@@ -5,7 +5,7 @@ There are five client libraries included in this repository:
 
 1. [`PHP`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/php)
 2. [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift)
-3. [`Objective C`](https://github.com/zellowork-server-api-libs/tree/master/objective-c)
+3. [`Objective C`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c)
 4. [`Java`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/java)
 5. [`C#`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/csharp)
 
