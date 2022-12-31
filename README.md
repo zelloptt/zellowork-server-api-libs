@@ -1,4 +1,4 @@
-# ZelloWork Server API Libraries
+# Zello Work Server API Libraries
 ## Project Structure
 
 There are five client libraries included in this repository:
@@ -20,7 +20,7 @@ To use `api_test.php`, replace the $host variable, the $apikey variable and repl
 
 ## Swift Library
 ### CocoaPod
-The [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift/CocoaPod) CocoaPod creates a `ZelloAPISwift` module that can be imported into any Swift file that wishes to access the ZelloWork API.
+The [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift/CocoaPod) CocoaPod creates a `ZelloAPISwift` module that can be imported into any Swift file that wishes to access the Zello Work API.
 
 To install using Swift 3, add `pod 'ZelloAPISwift'` to your Podfile. To use Swift 2.2, add `pod 'ZelloAPISwift', '1.0.3'` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift/CocoaPod/Example)
 
@@ -42,7 +42,7 @@ Instead, Swift provides a method of importing C code through [`Bridging Headers`
 
 ## Objective C Library
 ### CocoaPod
-The [`Objective C`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod) CocoaPod creates a `ZelloAPIObjC` module that can be imported into any Objective C file that wishes to access the ZelloWork API.
+The [`Objective C`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod) CocoaPod creates a `ZelloAPIObjC` module that can be imported into any Objective C file that wishes to access the Zello Work API.
 
 To install, add `pod 'ZelloAPIObjC'` to your Podfile. For more information, please see the [`Example Project.`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c/CocoaPod/Example)
 
@@ -71,5 +71,5 @@ The [`C#`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/csh
 A reference to the `System.Web.Extensions` component is required for any project adding the `ZelloAPI.cs` class.
 
 ## See also
-* [ZelloWork API reference](https://zellowork.com/api/)
-* [ZelloWork client SDK for Android](https://github.com/zelloptt/zello-android-client-sdk)
+* [Zello Work API reference](https://zellowork.com/api/)
+* [Zello Work client SDK for Android](https://github.com/zelloptt/zello-android-client-sdk)
