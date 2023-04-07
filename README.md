@@ -71,5 +71,5 @@ The [`C#`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/csh
 A reference to the `System.Web.Extensions` component is required for any project adding the `ZelloAPI.cs` class.
 
 ## See also
-* [Zello Work API reference](https://zellowork.com/api/)
+* [Zello Work API reference](https://zellowork.com/api.htm)
 * [Zello Work client SDK for Android](https://github.com/zelloptt/zello-android-client-sdk)
