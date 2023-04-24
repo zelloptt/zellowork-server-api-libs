@@ -269,7 +269,7 @@ static NSString *version = @"1.1.0";
   NSString *urlString = [prefix stringByAppendingString:[[self.host stringByAppendingString:@"/"] stringByAppendingString:command]];
   
   if (self.sessionId) {
-    [[urlString stringByAppendingString:@"?sid="] stringByAppendingString:_sessionId];
+    urlString = [[urlString stringByAppendingString:@"?sid="] stringByAppendingString:_sessionId];
   }
   
   self.lastURL = urlString;
