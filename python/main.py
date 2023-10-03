@@ -47,5 +47,6 @@ if __name__ == "__main__":
     for user in user_list:
         get_response = api.get_user(user)
         print(get_response)
+
         if get_response["status"] == "User not found":
             print(f'{user} succesfully deleted')
