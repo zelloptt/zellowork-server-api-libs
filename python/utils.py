@@ -2,6 +2,7 @@ import requests
 from hashlib import md5
 from urllib.parse import quote
 
+
 class zellowork_api():
 
     '''
@@ -87,7 +88,7 @@ class zellowork_api():
         else:
             f'User fetch fail. {r}'
 
-    def get_user(self, user : str):
+    def get_user(self, user: str):
         '''
         Function to get a specified user
         '''
@@ -109,7 +110,7 @@ class zellowork_api():
         print(r.json())
 
     def add_user(self, name: str,
-                 password: str, 
+                 password: str,
                  email: str = "",
                  full_name: str = "",
                  job: str = "",
@@ -120,8 +121,8 @@ class zellowork_api():
                  add: bool = False):
 
         if tags is None:
-             tags = []
-        
+            tags = []
+
         user_data = {
             "name": name,
             "password": md5(password.encode('utf-8')).hexdigest()
@@ -145,7 +146,7 @@ class zellowork_api():
 
         r = requests.request(
             'POST', f'{self.base_url}/user/save?sid={self.sid}', headers={}, data=user_data)
-        
+
         if r.status_code == 200:
             data = r.json()
             if data['code'] == '200':
@@ -153,13 +154,13 @@ class zellowork_api():
                 return data
         else:
             return f'{r.status_code} status code'
-    
-    def array_to_POST(self, user_array : []):
+
+    def array_to_POST(self, user_array: []):
         result_string = "login[]=" + user_array[0]
         for user in user_array[1:len(user_array)]:
             result_string += "&login[]=" + quote(user)
         return result_string
-    
+
     def pretty_print_POST(self, req):
         print('{}\n{}\r\n{}\r\n\r\n{}'.format(
             '-----------START-----------',
@@ -168,12 +169,12 @@ class zellowork_api():
             req.body,
         ))
 
-    def remove_users(self, user_array : []):
+    def remove_users(self, user_array: []):
         session = requests.Session()
         user_string = self.array_to_POST(user_array)
         print(user_string)
         request = requests.Request(
-            'POST',f'{self.base_url}/user/delete?sid={self.sid}', headers={"Content-Type":"application/x-www-form-urlencoded"}, data=user_string)
+            'POST', f'{self.base_url}/user/delete?sid={self.sid}', headers={"Content-Type": "application/x-www-form-urlencoded"}, data=user_string)
         prepared = request.prepare()
         self.pretty_print_POST(prepared)
         response = session.send(prepared)
@@ -181,5 +182,5 @@ class zellowork_api():
             print('Succesfully removed users')
         else:
             print('Error removing users')
-        
+
         return response
