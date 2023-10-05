@@ -28,7 +28,7 @@ open class ZelloAPI {
   // MARK: Public Variables
   
   /// API Version
-  open static let version = "1.1.0"
+  public static let version = "1.1.0"
   
   /// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
   open var sessionId: String?
@@ -511,7 +511,7 @@ private extension String {
   
   /// Calculates the MD5 hash of a string.
   func MD5() -> String {
-    guard let str = cString(using: String.Encoding.utf8) else {
+    guard let str = cString(using: .utf8) else {
       return ""
     }
     
@@ -526,7 +526,7 @@ private extension String {
       hash.appendFormat("%02x", result[i])
     }
     
-    result.deallocate(capacity: digestLen)
+    result.deallocate()
     
     return String(format: hash as String)
   }
