@@ -1,7 +1,7 @@
 import requests
 from hashlib import md5
 from urllib.parse import quote
-
+from typing  import Tuple
 
 class zellowork_api():
 
@@ -12,28 +12,29 @@ class zellowork_api():
     def __init__(self, api_key, network):
 
         self.network = network
-        self.base_url = f'https://{self.network}.zellowork.com'
+        self.base_url = f'{self.network}'
         self.api_key = api_key
 
-    def get_token(self):
+
+    def get_token(self) -> Tuple[bool, str]:
         '''
         Function to get auth token and session id
+        Returns a tuple where the first element is a boolean indicating success,
+        and the second element is a string message.
         '''
-
         r = requests.request(
             'GET', f'{self.base_url}/user/gettoken', headers={}, data={})
         response = r.json()
         if r.status_code == 200:
             self.token = response['token']
             self.sid = response['sid']
-            return 'Authentication successful!'
+            return True, 'Authentication successful!'
         else:
-            return f'Authentication not successful. {r}'
+            return False, f'Authentication not successful. {r}'
 
-    def login(self, username, password):
+    def login(self, username: str, password: str) -> Tuple[bool, str]:
         '''
         Function to login user to console
-
         Requires username and password
         '''
 
@@ -48,9 +49,9 @@ class zellowork_api():
         if r.status_code == 200:
             data = r.json()
             if data['code'] == '200':
-                return 'Login successful!'
+                return True, 'Login successful!'
         else:
-            return f'Login not successful. {r}'
+            return False, f'Login not successful. {r}'
 
     def get_analytics(self, start_time=1660712400, end_time=1660798799):
         '''
