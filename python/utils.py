@@ -9,18 +9,19 @@ class zellowork_api():
     Function class for python zellowork api
     '''
 
-    def __init__(self, api_key, network):
+    def __init__(self, api_key, network, base_domain="zellowork.com", verifyTls=True):
 
         self.network = network
-        self.base_url = f'https://{self.network}.zellowork.com'
+        self.base_url = f'https://{self.network}.{base_domain}'
         self.api_key = api_key
+        self.session = requests.Session()
+        self.session.verify = verifyTls
 
     def get_token(self):
         '''
         Function to get auth token and session id
         '''
-
-        r = requests.request(
+        r = self.session.request(
             'GET', f'{self.base_url}/user/gettoken', headers={}, data={})
         response = r.json()
         if r.status_code == 200:
@@ -42,9 +43,8 @@ class zellowork_api():
             'password': md5((md5(password.encode('utf-8')).hexdigest() + self.token + self.api_key).encode('utf-8')).hexdigest()
         }
 
-        r = requests.request(
+        r = self.session.request(
             'POST', f'{self.base_url}/user/login?sid={self.sid}', headers={}, data=payload)
-
         if r.status_code == 200:
             data = r.json()
             if data['code'] == '200':
@@ -65,7 +65,7 @@ class zellowork_api():
             'context': 1
         }
 
-        r = requests.request(
+        r = self.session.request(
             'POST', f'{self.base_url}/analytics/dispatch-metrics?sid={self.sid}', headers={}, data=payload)
 
         if r.status_code == 200:
@@ -80,8 +80,8 @@ class zellowork_api():
         '''
         Function to get the users of the network
         '''
-        r = requests.request(
-            'GET', f'{self.base_url}/user/get?sid={self.sid}', headers={}, data={})
+        r = self.session.request(
+            'GET', f'{self.base_url}/user/get?sid={self.sid}', headers={}, data={},)
         if r.status_code == 200:
             print("All users fetched")
             return r.json()
@@ -92,7 +92,7 @@ class zellowork_api():
         '''
         Function to get a specified user
         '''
-        r = requests.request(
+        r = self.session.request(
             'GET', f'{self.base_url}/user/get/login/{user}?sid={self.sid}', headers={}, data={}
         )
         if r.status_code == 200:
@@ -105,7 +105,7 @@ class zellowork_api():
         '''
         Gets the user limit for the network
         '''
-        r = requests.request(
+        r = self.session.request(
             'GET', f'{self.base_url}/user/get/max/1?sid={self.sid}', headers={}, data={})
         print(r.json())
 
@@ -144,7 +144,7 @@ class zellowork_api():
         if add:
             user_data["add"] = add
 
-        r = requests.request(
+        r = self.session.request(
             'POST', f'{self.base_url}/user/save?sid={self.sid}', headers={}, data=user_data)
 
         if r.status_code == 200:
@@ -170,14 +170,13 @@ class zellowork_api():
         ))
 
     def remove_users(self, user_array: []):
-        session = requests.Session()
         user_string = self.array_to_POST(user_array)
         print(user_string)
         request = requests.Request(
             'POST', f'{self.base_url}/user/delete?sid={self.sid}', headers={"Content-Type": "application/x-www-form-urlencoded"}, data=user_string)
         prepared = request.prepare()
         self.pretty_print_POST(prepared)
-        response = session.send(prepared)
+        response = self.session.send(prepared)
         if response.status_code == 200:
             print('Succesfully removed users')
         else:
