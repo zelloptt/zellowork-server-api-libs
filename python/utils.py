@@ -9,13 +9,13 @@ class zellowork_api():
     Function class for python zellowork api
     '''
 
-    def __init__(self, api_key, network, base_domain="zellowork.com", verifyTls=True):
-
+    def __init__(self, api_key, network, base_domain="zellowork.com", verify_tls=True):
+    
         self.network = network
         self.base_url = f'https://{self.network}.{base_domain}'
         self.api_key = api_key
         self.session = requests.Session()
-        self.session.verify = verifyTls
+        self.session.verify = verify_tls
 
     def get_token(self):
         '''
