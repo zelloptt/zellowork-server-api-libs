@@ -1,0 +1,8 @@
+{
+  "id": "auth-new",
+  "description": "Default /user/auth login then logout",
+  "steps": [
+    { "op": "authenticate", "legacy_auth": false },
+    { "op": "logout" }
+  ]
+}

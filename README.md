@@ -1,22 +1,47 @@
 # Zello Work Server API Libraries
 ## Project Structure
 
-There are five client libraries included in this repository:
+There are six client libraries in this repository:
 
 1. [`PHP`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/php)
-2. [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift)
-3. [`Objective C`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c)
-4. [`Java`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/java)
-5. [`C#`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/csharp)
+2. [`Python`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/python)
+3. [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/swift)
+4. [`Objective C`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/objective-c)
+5. [`Java`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/java)
+6. [`C#`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/csharp)
 
-In addition, we offer our Swift and Objective C libraries available as [`CocoaPods.`](https://cocoapods.org)
+Swift and Objective C are also published as [`CocoaPods`](https://cocoapods.org).
 
-Each library provides a ZelloAPI class and an test for the ZelloAPI. For the Swift, Objective C, Java and C# libraries, this test comes in the form of a project titled `APITest`. These projects will output the results of the `APITest` to the console.
+Each library exposes a Zello API client. PHP has `api_test.php`; Python has `main.py`; Swift, Objective C, Java, and C# ship an `APITest` project that prints results to the console.
+
+## Authentication (1.2.0+)
+
+**Breaking change.** `authenticate` / `auth` / `login` now call [`user/auth`](https://zellowork.com/api.htm#auth) by default. The client sends the password as given, plus `api_mac`: HMAC-SHA256 of `username:token` keyed by the network API key. It does not MD5-hash the password before login.
+
+Older Zello Enterprise Server (ZES) that only implement MD5 [`user/login`](https://zellowork.com/api.htm#login) still work if you set the legacy flag:
+
+| Language | Flag |
+|----------|------|
+| PHP | `$api->use_legacy_auth = true;` |
+| Python | `zellowork_api(..., use_legacy_auth=True)` |
+| Java, Swift, Objective-C | `api.useLegacyAuth = true` |
+| C# | `api.UseLegacyAuth = true` |
+
+Hosts with no scheme default to `https://`. Use HTTPS; HTTP sends credentials in the clear.
+
+To smoke-test every library against a live network from a Mac, see [`tools/live-test/README.md`](tools/live-test/README.md).
 
 ## PHP Library
 The [`PHP`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/php) library includes a `zello_server_api.class.php` file and a `api_test.php` script to test the functionality of the `zello_server_api.class.php` class.
 
-To use `api_test.php`, replace the $host variable, the $apikey variable and replace the username and password strings in the `auth` method. Then, simply run the script and view the output.
+To use `api_test.php`, replace the `$host` variable, the `$apikey` variable, and the username and password strings in the `auth` method. Then run the script. For older ZES, set `$ltapi->use_legacy_auth = true` before `auth`.
+
+## Python Library
+The [`Python`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/python) library is `utils.py` (`zellowork_api`) plus a `main.py` sample.
+
+Create `params.json` next to `main.py` with `USERNAME`, `PASSWORD`, `NETWORK`, and `API_KEY`, then run `python main.py`. `login()` uses `/user/auth` unless you pass `use_legacy_auth=True` to `zellowork_api`.
+
+Depends on [`requests`](https://pypi.org/project/requests/).
 
 ## Swift Library
 ### CocoaPod
@@ -34,7 +59,7 @@ The [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/
 `APITest` is an iOS app project that can be run using Xcode on macOS. Open `ViewController.swift` and replace the `APITest` constructor Strings with the hostname, API key, username, and password. Then, simply run the project and view the output.
 
 #### Dependencies
-- The Swift library includes a reference to `CommonCrypto`, a C library, for the MD5 hashing of login credentials. Unfortunately, due to Swift limitations, C libraries cannot be simply imported.
+- The Swift library includes a reference to `CommonCrypto`, a C library, for HMAC-SHA256 login credentials and MD5 hashing of user password attributes. Unfortunately, due to Swift limitations, C libraries cannot be simply imported.
 Instead, Swift provides a method of importing C code through [`Bridging Headers`](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html).
 **Any project using the `ZelloAPI.swift` class will need to having a bridging header with the following import:** `#import <CommonCrypto/CommonCrypto.h>`
 - Swift 3. For those wishing to target Swift 2.2, the source code can be found [`here.`](https://github.com/zelloptt/zellowork-server-api-libs/blob/e62401243864f17314f052911b47706a01f8e826/swift/ZelloAPI.swift)

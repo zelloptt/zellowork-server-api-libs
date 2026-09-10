@@ -154,17 +154,14 @@ private extension String {
     }
     
     let strLen = CC_LONG(lengthOfBytes(using: String.Encoding.utf8))
-    let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-    let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
     
-    CC_MD5(str, strLen, result)
+    CC_MD5(str, strLen, &digest)
     
     let hash = NSMutableString()
-    for i in 0..<digestLen {
-      hash.appendFormat("%02x", result[i])
+    for i in 0..<digest.count {
+      hash.appendFormat("%02x", digest[i])
     }
-    
-    result.deallocate(capacity: digestLen)
     
     return String(format: hash as String)
   }

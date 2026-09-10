@@ -19,22 +19,25 @@ public typealias ResultCompletionHandler = (Bool, [String : AnyObject]?, NSError
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
 
- - Version 1.1.0
+ - Version 1.2.0
  - Swift Version 3.0
- - Minimum iOS Version 8.0
+ - Minimum iOS Version 7.0
 */
 open class ZelloAPI {
   
   // MARK: Public Variables
   
   /// API Version
-  open static let version = "1.1.0"
+  public static let version = "1.2.0"
   
   /// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
   open var sessionId: String?
   
   /// Last accessed API URL. Useful for API troubleshooting.
   open var lastURL: String?
+
+  /// When true, authenticate with legacy MD5 user/login (older Zello Enterprise Server / ZES). Default false uses /user/auth.
+  open var useLegacyAuth = false
   
   // MARK: Private Variables
   
@@ -61,6 +64,10 @@ open class ZelloAPI {
    If authentication succeeds, sessionId is set to the Session ID.
    The Session ID is reusable so it's recommended that you save this value and use it for further API calls.
    Once you are done using the API, call ZelloAPI.logout() to end the session and invalidate Session ID.
+   By default uses POST /user/auth with the password and api_mac
+   (HMAC-SHA256 of "username:token" keyed by the network API key).
+   Set useLegacyAuth for older Zello Enterprise Server (ZES) that only support MD5 user/login.
+   Prefer HTTPS; over HTTP, credentials are not protected in transit.
    
    - parameter username:          administrative username
    - parameter password:          administrative password
@@ -95,10 +102,20 @@ open class ZelloAPI {
         completionHandler(false, response, error)
         return
       }
+
+      let parameters: String
+      let command: String
+      if weakSelf.useLegacyAuth {
+        let hashedPassword = (password.MD5() + token + apiKey).MD5()
+        parameters = "username=\(username.urlEncode())&password=\(hashedPassword)"
+        command = "user/login"
+      } else {
+        let apiMac = ("\(username):\(token)").hmacSHA256(key: apiKey)
+        parameters = "username=\(username.urlEncode())&password=\(password.urlEncode())&api_mac=\(apiMac)"
+        command = "user/auth"
+      }
       
-      let parameters = "username=\(username)&password=\((password.MD5() + token + apiKey).MD5())"
-      
-      weakSelf.callAPI("user/login", httpMethod: .POST, parameters: parameters, completionHandler: completionHandler)
+      weakSelf.callAPI(command, httpMethod: .POST, parameters: parameters, completionHandler: completionHandler)
     })
   }
   
@@ -392,7 +409,7 @@ open class ZelloAPI {
       return
     }
     
-    var prefix = "http://"
+    var prefix = "https://"
     if host.contains("http://") || host.contains("https://") {
       prefix = ""
     }
@@ -516,18 +533,36 @@ private extension String {
     }
     
     let strLen = CC_LONG(lengthOfBytes(using: String.Encoding.utf8))
-    let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-    let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
     
-    CC_MD5(str, strLen, result)
+    CC_MD5(str, strLen, &digest)
     
     let hash = NSMutableString()
-    for i in 0..<digestLen {
-      hash.appendFormat("%02x", result[i])
+    for i in 0..<digest.count {
+      hash.appendFormat("%02x", digest[i])
     }
     
-    result.deallocate(capacity: digestLen)
-    
+    return String(format: hash as String)
+  }
+
+  /// Calculates the HMAC-SHA256 of this string using the given key.
+  func hmacSHA256(key: String) -> String {
+    guard let message = cString(using: String.Encoding.utf8),
+          let keyCString = key.cString(using: String.Encoding.utf8) else {
+      return ""
+    }
+
+    let messageLen = lengthOfBytes(using: String.Encoding.utf8)
+    let keyLen = key.lengthOfBytes(using: String.Encoding.utf8)
+    var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+
+    CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA256), keyCString, keyLen, message, messageLen, &digest)
+
+    let hash = NSMutableString()
+    for i in 0..<digest.count {
+      hash.appendFormat("%02x", digest[i])
+    }
+
     return String(format: hash as String)
   }
   

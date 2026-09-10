@@ -1,0 +1,8 @@
+{
+  "id": "auth-legacy",
+  "description": "Legacy MD5 user/login then logout (may fail on cloud networks that reject user/login)",
+  "steps": [
+    { "op": "authenticate", "legacy_auth": true },
+    { "op": "logout" }
+  ]
+}

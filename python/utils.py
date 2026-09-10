@@ -1,5 +1,6 @@
+import hmac
 import requests
-from hashlib import md5
+from hashlib import md5, sha256
 from urllib.parse import quote
 
 
@@ -9,13 +10,15 @@ class zellowork_api():
     Function class for python zellowork api
     '''
 
-    def __init__(self, api_key, network, base_domain="zellowork.com", verify_tls=True):
+    def __init__(self, api_key, network, base_domain="zellowork.com", verify_tls=True, use_legacy_auth=False):
     
         self.network = network
         self.base_url = f'https://{self.network}.{base_domain}'
         self.api_key = api_key
         self.session = requests.Session()
         self.session.verify = verify_tls
+        # When True, use MD5 user/login (older Zello Enterprise Server / ZES). Default uses /user/auth.
+        self.use_legacy_auth = use_legacy_auth
 
     def get_token(self):
         '''
@@ -33,18 +36,34 @@ class zellowork_api():
 
     def login(self, username, password):
         '''
-        Function to login user to console
+        Authenticate after get_token().
 
-        Requires username and password
+        By default uses POST /user/auth with the password and
+        api_mac = HMAC-SHA256(api_key, username + ":" + token).
+        Set use_legacy_auth for older Zello Enterprise Server (ZES) that only support MD5 user/login.
+        Prefer HTTPS; over HTTP, credentials are not protected in transit.
         '''
 
-        payload = {
-            'username': username,
-            'password': md5((md5(password.encode('utf-8')).hexdigest() + self.token + self.api_key).encode('utf-8')).hexdigest()
-        }
+        if self.use_legacy_auth:
+            payload = {
+                'username': username,
+                'password': md5((md5(password.encode('utf-8')).hexdigest() + self.token + self.api_key).encode('utf-8')).hexdigest()
+            }
+            endpoint = 'user/login'
+        else:
+            payload = {
+                'username': username,
+                'password': password,
+                'api_mac': hmac.new(
+                    self.api_key.encode('utf-8'),
+                    f'{username}:{self.token}'.encode('utf-8'),
+                    sha256
+                ).hexdigest()
+            }
+            endpoint = 'user/auth'
 
         r = self.session.request(
-            'POST', f'{self.base_url}/user/login?sid={self.sid}', headers={}, data=payload)
+            'POST', f'{self.base_url}/{endpoint}?sid={self.sid}', headers={}, data=payload)
         if r.status_code == 200:
             data = r.json()
             if data['code'] == '200':

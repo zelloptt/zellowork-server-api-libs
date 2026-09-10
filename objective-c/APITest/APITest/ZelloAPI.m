@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, HTTPMethod) {
   
 @implementation ZelloAPI
 
-static NSString *version = @"1.1.0";
+static NSString *version = @"1.2.0";
 
 #pragma mark Version
 
@@ -83,11 +83,20 @@ static NSString *version = @"1.1.0";
       completionBlock(NO, response, error);
       return;
     }
+
+    NSString *parameters;
+    NSString *command;
+    if (weakSelf.useLegacyAuth) {
+      NSString *hashedPassword = [weakSelf MD5:[[[weakSelf MD5:password] stringByAppendingString:token] stringByAppendingString:weakSelf.apiKey]];
+      parameters = [[[@"username=" stringByAppendingString:[weakSelf urlEncode:username]] stringByAppendingString:@"&password="] stringByAppendingString:hashedPassword];
+      command = @"user/login";
+    } else {
+      NSString *apiMac = [weakSelf hmacSHA256:[[username stringByAppendingString:@":"] stringByAppendingString:token] key:weakSelf.apiKey];
+      parameters = [[[[[@"username=" stringByAppendingString:[weakSelf urlEncode:username]] stringByAppendingString:@"&password="] stringByAppendingString:[weakSelf urlEncode:password]] stringByAppendingString:@"&api_mac="] stringByAppendingString:apiMac];
+      command = @"user/auth";
+    }
     
-    NSString *hashedPassword = [weakSelf MD5:[[[weakSelf MD5:password] stringByAppendingString:token] stringByAppendingString:weakSelf.apiKey]];
-    NSString *parameters = [[[@"username=" stringByAppendingString:username] stringByAppendingString:@"&password="] stringByAppendingString:hashedPassword];
-    
-    [weakSelf callAPI:@"user/login" httpMethod:HTTPMethodPOST parameters:parameters completionBlock:completionBlock];
+    [weakSelf callAPI:command httpMethod:HTTPMethodPOST parameters:parameters completionBlock:completionBlock];
   }];
 }
 
@@ -261,7 +270,7 @@ static NSString *version = @"1.1.0";
     return;
   }
   
-  NSString *prefix = @"http://";
+  NSString *prefix = @"https://";
   if ([self.host containsString:@"http://"] || [self.host containsString:@"https://"]) {
     prefix = @"";
   }
@@ -377,6 +386,24 @@ static NSString *version = @"1.1.0";
     [returnString appendFormat:@"%02x",md5Buffer[i]];
   }
   
+  return returnString;
+}
+
+/**
+ Calculates the HMAC-SHA256 of a string using the given key.
+ */
+- (NSString *)hmacSHA256:(NSString *)message key:(NSString *)key {
+  const char *cKey = [key UTF8String];
+  const char *cMessage = [message UTF8String];
+  unsigned char result[CC_SHA256_DIGEST_LENGTH];
+
+  CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cMessage, strlen(cMessage), result);
+
+  NSMutableString *returnString = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+  for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
+    [returnString appendFormat:@"%02x", result[i]];
+  }
+
   return returnString;
 }
 
