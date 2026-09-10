@@ -18,7 +18,7 @@ typedef void (^ResultCompletionBlock)(BOOL,  NSDictionary * _Nullable , NSError 
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
  
- - Version 1.1.0
+ - Version 1.2.0
  - Minimum iOS Version 8.0
  */
 @interface ZelloAPI : NSObject
@@ -40,6 +40,11 @@ typedef void (^ResultCompletionBlock)(BOOL,  NSDictionary * _Nullable , NSError 
  */
 @property(atomic, strong, nullable) NSString *lastURL;
 
+/**
+ *  When YES, authenticate with legacy MD5 user/login (older Zello Enterprise Server / ZES). Default NO uses /user/auth.
+ */
+@property(nonatomic, assign) BOOL useLegacyAuth;
+
 #pragma mark Initializers
 
 - (nonnull id)initWithHost:(nonnull NSString *)host apiKey:(nonnull NSString *)apiKey;
@@ -53,6 +58,10 @@ typedef void (^ResultCompletionBlock)(BOOL,  NSDictionary * _Nullable , NSError 
  If authentication succeeds, sessionId is set to the Session ID.
  The Session ID is reusable so it's recommended that you save this value and use it for further API calls.
  Once you are done using the API, call [ZelloAPI logout] to end the session and invalidate Session ID.
+ By default uses POST /user/auth with the password and api_mac
+ (HMAC-SHA256 of "username:token" keyed by the network API key).
+ Set useLegacyAuth for older Zello Enterprise Server (ZES) that only support MD5 user/login.
+ Prefer HTTPS; over HTTP, credentials are not protected in transit.
  
  - parameter username:        administrative username
  - parameter password:        administrative password

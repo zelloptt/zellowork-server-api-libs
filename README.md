@@ -13,6 +13,16 @@ In addition, we offer our Swift and Objective C libraries available as [`CocoaPo
 
 Each library provides a ZelloAPI class and an test for the ZelloAPI. For the Swift, Objective C, Java and C# libraries, this test comes in the form of a project titled `APITest`. These projects will output the results of the `APITest` to the console.
 
+## Authentication (1.2.0+)
+
+By default, login uses [`user/auth`](https://zellowork.com/api.htm#auth): the password plus `api_mac` (HMAC-SHA256 of the network API key over `username:token`). The password is not MD5-hashed on the client before it is sent.
+
+For older Zello Enterprise Server (ZES) that only support the MD5 [`user/login`](https://zellowork.com/api.htm#login) challenge, set the legacy-auth flag (`useLegacyAuth` / `use_legacy_auth` / `UseLegacyAuth`, depending on language).
+
+Hosts without a scheme default to `https://`. Prefer HTTPS; over HTTP, credentials are not protected in transit.
+
+To smoke-test all client libraries against a live network from a Mac, see [`tools/live-test/README.md`](tools/live-test/README.md).
+
 ## PHP Library
 The [`PHP`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/php) library includes a `zello_server_api.class.php` file and a `api_test.php` script to test the functionality of the `zello_server_api.class.php` class.
 
@@ -34,7 +44,7 @@ The [`Swift`](https://github.com/zelloptt/zellowork-server-api-libs/tree/master/
 `APITest` is an iOS app project that can be run using Xcode on macOS. Open `ViewController.swift` and replace the `APITest` constructor Strings with the hostname, API key, username, and password. Then, simply run the project and view the output.
 
 #### Dependencies
-- The Swift library includes a reference to `CommonCrypto`, a C library, for the MD5 hashing of login credentials. Unfortunately, due to Swift limitations, C libraries cannot be simply imported.
+- The Swift library includes a reference to `CommonCrypto`, a C library, for HMAC-SHA256 login credentials and MD5 hashing of user password attributes. Unfortunately, due to Swift limitations, C libraries cannot be simply imported.
 Instead, Swift provides a method of importing C code through [`Bridging Headers`](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html).
 **Any project using the `ZelloAPI.swift` class will need to having a bridging header with the following import:** `#import <CommonCrypto/CommonCrypto.h>`
 - Swift 3. For those wishing to target Swift 2.2, the source code can be found [`here.`](https://github.com/zelloptt/zellowork-server-api-libs/blob/e62401243864f17314f052911b47706a01f8e826/swift/ZelloAPI.swift)

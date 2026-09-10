@@ -1,0 +1,9 @@
+{
+  "id": "session-get-users",
+  "description": "New auth then list users with sid",
+  "steps": [
+    { "op": "authenticate", "legacy_auth": false },
+    { "op": "get_users" },
+    { "op": "logout" }
+  ]
+}

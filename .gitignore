@@ -278,3 +278,6 @@ objective-c/CocoaPod/Example/Example.xcodeproj/xcuserdata
 objective-c/CocoaPod/Example/Pods/Pods.xcodeproj/xcuserdata
 objective-c/CocoaPod/ZelloAPIObjC.xcodeproj/xcuserdata
 objective-c/CocoaPod/ZelloAPIObjC.xcodeproj/xcshareddata
+tools/live-test/.venv/
+__pycache__/
+*.pyc

@@ -1,0 +1,36 @@
+services:
+  php:
+    build: ./runners/php
+    volumes:
+      - ../..:/workspace:ro
+    working_dir: /workspace
+    environment:
+      ZW_HOST: ${ZW_HOST:-}
+      ZW_USERNAME: ${ZW_USERNAME:-}
+      ZW_API_KEY: ${ZW_API_KEY:-}
+      ZW_PASSWORD: ${ZW_PASSWORD:-}
+      ZW_SCENARIO: ${ZW_SCENARIO:-}
+
+  java:
+    build: ./runners/java
+    volumes:
+      - ../..:/workspace:ro
+    working_dir: /workspace
+    environment:
+      ZW_HOST: ${ZW_HOST:-}
+      ZW_USERNAME: ${ZW_USERNAME:-}
+      ZW_API_KEY: ${ZW_API_KEY:-}
+      ZW_PASSWORD: ${ZW_PASSWORD:-}
+      ZW_SCENARIO: ${ZW_SCENARIO:-}
+
+  csharp:
+    build: ./runners/csharp
+    volumes:
+      - ../..:/workspace:ro
+    working_dir: /workspace
+    environment:
+      ZW_HOST: ${ZW_HOST:-}
+      ZW_USERNAME: ${ZW_USERNAME:-}
+      ZW_API_KEY: ${ZW_API_KEY:-}
+      ZW_PASSWORD: ${ZW_PASSWORD:-}
+      ZW_SCENARIO: ${ZW_SCENARIO:-}

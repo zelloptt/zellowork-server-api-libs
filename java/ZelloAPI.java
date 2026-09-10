@@ -22,6 +22,9 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 /**
  ZelloWork server Java API wrapper class.
 
@@ -30,7 +33,7 @@ import java.util.Map;
  Please note that all text values passed to the API must be in UTF-8 encoding
  and any text data returned are in UTF-8 as well.
 
- - Version 1.1.0
+ - Version 1.2.0
  */
 public class ZelloAPI {
 
@@ -39,7 +42,7 @@ public class ZelloAPI {
 	}
 
 	/// API Version
-	public static String version = "1.1.0";
+	public static String version = "1.2.0";
 
 	/// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
 	public String sessionId;
@@ -51,6 +54,9 @@ public class ZelloAPI {
 	private String host;
 	/// API Key.
 	private String apiKey;
+
+	/// When true, authenticate with legacy MD5 user/login (older Zello Enterprise Server / ZES). Default false uses /user/auth.
+	public boolean useLegacyAuth = false;
 
 	public ZelloAPI(String host, String apiKey) {
 		this(host, apiKey, null);
@@ -68,6 +74,10 @@ public class ZelloAPI {
 	 If authentication succeeds, sessionId is set to the Session ID.
 	 The Session ID is reusable so it's recommended that you save this value and use it for further API calls.
 	 Once you are done using the API, call ZelloAPI.logout() to end the session and invalidate Session ID.
+	 By default uses POST /user/auth with the password and api_mac
+	 (HMAC-SHA256 of "username:token" keyed by the network API key).
+	 Set useLegacyAuth for older Zello Enterprise Server (ZES) that only support MD5 user/login.
+	 Prefer HTTPS; over HTTP, credentials are not protected in transit.
 
 	 - parameter username:          administrative username
 	 - parameter password:          administrative password
@@ -98,10 +108,21 @@ public class ZelloAPI {
 						return;
 					}
 
-					String hashedPassword = MD5(MD5(password) + token + apiKey);
-					String parameters = "username=" + username + "&password=" + hashedPassword;
+					String parameters;
+					String command;
+					if (useLegacyAuth) {
+						String hashedPassword = MD5(MD5(password) + token + apiKey);
+						parameters = "username=" + urlEncode(username) + "&password=" + hashedPassword;
+						command = "user/login";
+					} else {
+						String apiMac = hmacSHA256(apiKey, username + ":" + token);
+						parameters = "username=" + urlEncode(username)
+								+ "&password=" + urlEncode(password)
+								+ "&api_mac=" + apiMac;
+						command = "user/auth";
+					}
 
-					callAPI("user/login", HTTPMethod.POST, parameters, completionHandler);
+					callAPI(command, HTTPMethod.POST, parameters, completionHandler);
 				} catch (Exception e) {
 					completionHandler.onResult(false, response, e);
 				}
@@ -387,7 +408,7 @@ public class ZelloAPI {
 	}
 
 	private void callAPI(String command, HTTPMethod method, String parameters, ResultCompletionHandler completionHandler) {
-		String prefix = "http://";
+		String prefix = "https://";
 		if (host.contains("http://") || host.contains("https://")) {
 			prefix = "";
 		}
@@ -457,10 +478,13 @@ public class ZelloAPI {
 	// Reads an InputStream and converts it to a String.
 	private String readIt(InputStream stream) throws IOException {
 		Reader reader = new InputStreamReader(stream, "UTF-8");
+		StringBuilder sb = new StringBuilder();
 		char[] buffer = new char[10240];
-		int bytesRead = reader.read(buffer);
-
-		return new String(buffer, 0, bytesRead);
+		int n;
+		while ((n = reader.read(buffer)) != -1) {
+			sb.append(buffer, 0, n);
+		}
+		return sb.toString();
 	}
 
 	private String convertHTTPMethodToString(HTTPMethod method) {
@@ -488,6 +512,17 @@ public class ZelloAPI {
 		}
 
 		return null;
+	}
+
+	private String hmacSHA256(String key, String message) throws Exception {
+		Mac mac = Mac.getInstance("HmacSHA256");
+		mac.init(new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256"));
+		byte[] digest = mac.doFinal(message.getBytes("UTF-8"));
+		StringBuilder sb = new StringBuilder(digest.length * 2);
+		for (byte b : digest) {
+			sb.append(String.format("%02x", b));
+		}
+		return sb.toString();
 	}
 
 	private String urlEncode(String string) {

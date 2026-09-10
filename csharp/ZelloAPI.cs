@@ -20,14 +20,14 @@ namespace Zello.API
 	/// from your C# code to add, modify and delete users and channels.
 	/// Please note that all text values passed to the API must be in UTF-8 encoding
 	/// and any text data returned are in UTF-8 as well.
-	/// - Version 1.1.0
+	/// - Version 1.2.0
 	/// </summary>
 	public class ZelloAPI
 	{
 		/// <summary>
 		/// API Version
 		/// </summary>
-		public static string Version = "1.1.0";
+		public static string Version = "1.2.0";
 
 		/// <summary>
 		/// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
@@ -47,6 +47,11 @@ namespace Zello.API
 		/// API Key
 		/// </summary>
 		string apiKey;
+
+		/// <summary>
+		/// When true, authenticate with legacy MD5 user/login (older Zello Enterprise Server / ZES). Default false uses /user/auth.
+		/// </summary>
+		public bool UseLegacyAuth = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Zello.API.ZelloAPI"/> class.
@@ -77,6 +82,10 @@ namespace Zello.API
 		/// If authentication succeeds, SessionId is set to the Session ID.
 		/// The Session ID is reusable so it's recommended that you save this value and use it for further API calls.
 		/// Once you are done using the API, call ZelloAPI.Logout() to end the session and invalidate Session ID.
+		/// By default uses POST /user/auth with the password and api_mac
+		/// (HMAC-SHA256 of "username:token" keyed by the network API key).
+		/// Set UseLegacyAuth for older Zello Enterprise Server (ZES) that only support MD5 user/login.
+		/// Prefer HTTPS; over HTTP, credentials are not protected in transit.
 		/// </summary>
 		/// <param name="username">administrative username.</param>
 		/// <param name="password">administrative password.</param>
@@ -107,10 +116,24 @@ namespace Zello.API
 				return returnResult;
 			}
 
-			string hashedPassword = MD5Hash(MD5Hash(password) + token + apiKey);
-			string parameters = "username=" + username + "&password=" + hashedPassword;
+			string parameters;
+			string command;
+			if (UseLegacyAuth)
+			{
+				string hashedPassword = MD5Hash(MD5Hash(password) + token + apiKey);
+				parameters = "username=" + urlEncode(username) + "&password=" + hashedPassword;
+				command = "user/login";
+			}
+			else
+			{
+				string apiMac = hmacSHA256(apiKey, username + ":" + token);
+				parameters = "username=" + urlEncode(username)
+					+ "&password=" + urlEncode(password)
+					+ "&api_mac=" + apiMac;
+				command = "user/auth";
+			}
 
-			returnResult = await callAPI("user/login", HTTPMethod.POST, parameters);
+			returnResult = await callAPI(command, HTTPMethod.POST, parameters);
 
 			return returnResult;
 		}
@@ -387,7 +410,7 @@ namespace Zello.API
 		{
 			ZelloAPIResult returnResult;
 
-			string prefix = "http://";
+			string prefix = "https://";
 			if (host.Contains("http://") || host.Contains("https://"))
 			{
 				prefix = "";
@@ -468,6 +491,20 @@ namespace Zello.API
 
 			// Return the hexadecimal string.
 			return sBuilder.ToString();
+		}
+
+		string hmacSHA256(string key, string message)
+		{
+			using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key)))
+			{
+				byte[] data = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+				var sBuilder = new StringBuilder(data.Length * 2);
+				for (int i = 0; i < data.Length; i++)
+				{
+					sBuilder.Append(data[i].ToString("x2"));
+				}
+				return sBuilder.ToString();
+			}
 		}
 
 		string urlEncode(string input)

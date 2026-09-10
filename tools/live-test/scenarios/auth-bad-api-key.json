@@ -1,0 +1,8 @@
+{
+  "id": "auth-bad-api-key",
+  "description": "Wrong API key must fail new auth (api_mac)",
+  "expect_success": false,
+  "steps": [
+    { "op": "authenticate", "legacy_auth": false, "api_key": "invalid-api-key" }
+  ]
+}

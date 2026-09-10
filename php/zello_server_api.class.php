@@ -7,14 +7,14 @@
  * Please note that all text values passed to the API must be in UTF-8 encoding 
  * and any text data returned are in UTF-8 as well.
  * 
- * @version 1.1.0
+ * @version 1.2.0
  * 
  */
 class ZelloServerAPI {
   /**
 	 * API version
 	 */
-	public $version = "1.1.0";
+	public $version = "1.2.0";
 	/**
 	 * Dataset returned by the most recent API call {Array}.
 	 * Use this array to retrieve the result of a successful API call, the field is not defined if the API call failed
@@ -51,6 +51,12 @@ class ZelloServerAPI {
 	protected $curlConnectionTimeout;
 	protected $curlExecutionTimeout;
 
+	/**
+	 * When true, authenticate with legacy MD5 user/login (older Zello Enterprise Server / ZES).
+	 * Default false uses POST /user/auth with the password and api_mac.
+	 */
+	public $use_legacy_auth = false;
+
 	function __construct($host, $api_key, $sid=null, $curlConnectionTimeout=null, $curlExecutionTimeout=null) {
 		$this->host = $host;
 		$this->api_key = $api_key;
@@ -80,7 +86,11 @@ class ZelloServerAPI {
 	 * If authentication fails, use the errorCode and errorDescription attributes to get error details.
 	 * If authentication succeeds, $this->sid is set to the Session ID.
 	 * The Session ID is reusable so it's recommended that you save this value and use it for further API calls.
-	 * Once you are done using API call ZelloServerAPI::logout() to end the session and invalidate Session ID
+	 * Once you are done using API call ZelloServerAPI::logout() to end the session and invalidate Session ID.
+	 * By default uses POST /user/auth with the password and api_mac
+	 * (HMAC-SHA256 of "username:token" keyed by the network API key).
+	 * Set $use_legacy_auth for older Zello Enterprise Server (ZES) that only support MD5 user/login.
+	 * Prefer HTTPS; over HTTP, credentials are not protected in transit.
 	 * @see logout()
 	 * @param $username {String} administrative user username
 	 * @param $password {String} administrative user password
@@ -93,9 +103,17 @@ class ZelloServerAPI {
 		$token = $this->data["token"];
 		$this->sid = $this->data["sid"];
 
-		return $this->callAPI("user/login", array(
+		if ($this->use_legacy_auth) {
+			return $this->callAPI("user/login", array(
+				"username" => $username,
+				"password" => md5(md5($password).$token.$this->api_key)
+			));
+		}
+
+		return $this->callAPI("user/auth", array(
 			"username" => $username,
-			"password" => md5(md5($password).$token.$this->api_key)
+			"password" => $password,
+			"api_mac" => hash_hmac('sha256', $username . ':' . $token, $this->api_key)
 		));
 	}
 	/**
@@ -357,7 +375,7 @@ class ZelloServerAPI {
 	
 	private function callAPI($command, $data = array(), $returnRawRes=false) {
 		$this->data = array();
-		$pref = "http://";
+		$pref = "https://";
 		if (
 			substr($this->host, 0, 7) == 'http://' ||
 			substr($this->host, 0, 8) == 'https://'
