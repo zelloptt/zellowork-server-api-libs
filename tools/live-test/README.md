@@ -55,7 +55,6 @@ Each runner prints one JSON line: `{"lang","scenario","ok","error?"}` and exits 
 - Docker: `runners/php`, `runners/java`, `runners/csharp` (compose services)
 - Host: `runners/python`, `runners/swift`, `runners/objc`
 - Canonical library sources under `php/`, `python/`, `java/`, `csharp/`, `swift/`, `objective-c/` are mounted or compiled as-is
-- Swift: `run.sh` applies tiny temp-copy patches (`public static`, `deallocate()`) so modern `swiftc` can build the Swift 3-era sources without changing the shipping file
 
 ## Adding a scenario
 

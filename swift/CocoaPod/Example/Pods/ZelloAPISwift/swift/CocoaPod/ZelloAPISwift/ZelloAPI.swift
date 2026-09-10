@@ -28,7 +28,7 @@ open class ZelloAPI {
   // MARK: Public Variables
   
   /// API Version
-  open static let version = "1.2.0"
+  public static let version = "1.2.0"
   
   /// Session ID used to identify logged in client. Typically you'll want to authenticate first and store the Session ID to reuse later.
   open var sessionId: String?
@@ -533,17 +533,14 @@ private extension String {
     }
     
     let strLen = CC_LONG(lengthOfBytes(using: String.Encoding.utf8))
-    let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-    let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
+    var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
     
-    CC_MD5(str, strLen, result)
+    CC_MD5(str, strLen, &digest)
     
     let hash = NSMutableString()
-    for i in 0..<digestLen {
-      hash.appendFormat("%02x", result[i])
+    for i in 0..<digest.count {
+      hash.appendFormat("%02x", digest[i])
     }
-    
-    result.deallocate(capacity: digestLen)
     
     return String(format: hash as String)
   }
@@ -557,17 +554,14 @@ private extension String {
 
     let messageLen = lengthOfBytes(using: String.Encoding.utf8)
     let keyLen = key.lengthOfBytes(using: String.Encoding.utf8)
-    let digestLen = Int(CC_SHA256_DIGEST_LENGTH)
-    let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
+    var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
 
-    CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA256), keyCString, keyLen, message, messageLen, result)
+    CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA256), keyCString, keyLen, message, messageLen, &digest)
 
     let hash = NSMutableString()
-    for i in 0..<digestLen {
-      hash.appendFormat("%02x", result[i])
+    for i in 0..<digest.count {
+      hash.appendFormat("%02x", digest[i])
     }
-
-    result.deallocate(capacity: digestLen)
 
     return String(format: hash as String)
   }
